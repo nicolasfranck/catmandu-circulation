@@ -1,0 +1,6 @@
+# configuration file for development environment
+
+warnings: 1
+show_errors: 1
+auto_reload: 0
+

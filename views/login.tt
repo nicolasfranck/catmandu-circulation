@@ -1,0 +1,27 @@
+[% IF settings.ssl.active %]
+<script type="text/javascript">
+ if (window.location.protocol != 'https:') {
+   location.href = 'https://' + window.location.hostname [% IF settings.ssl.port %]+ ":[% settings.ssl.port %]"[%END%] + window.location.pathname + window.location.search;
+ }
+</script>
+[% END %]
+<div id="menu-main">
+  <ul>
+    <li><a href="[% request.uri_for('/request') %]">Login</a></li>
+  </ul>
+</div>
+<div id="main">
+  <form name="loginform" method="post">
+    <table>
+      <tr>
+        <th>Login</th><td><input type="text" name="username" size="20" value=""/></td>
+      </tr>
+      <tr>
+        <th>Wachtwoord</th><td><input type="password" name="password" size="20" value=""/></td>
+      </tr>
+      <tr>
+        <td colspan="2" align="right"><input type="submit" name="authen_loginbutton" value="Sign In"/></td>
+      </tr>
+    </table>
+  </form>
+</div>

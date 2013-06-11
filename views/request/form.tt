@@ -1,0 +1,117 @@
+[% MACRO input BLOCK %]
+  [% SWITCH type %]
+    [% CASE 'textarea' %]
+      <textarea name="[% name | html %]" cols="36" rows="3" [% IF readonly %]readonly="readonly"[% END %]>[% params.item(name) | html %]</textarea>
+    [% CASE %]
+      <input type="text" value="[% params.item(name) | html %]" name="[% name | html %]" [% IF readonly %]readonly="readonly"[% END %] [% IF placeholder %]placeholder="[% placeholder %]"[% END %]>
+  [% END %]
+[% END %]
+
+[% MACRO control_group BLOCK %]
+  <div class="control-group[% IF errors.grep(name.upper).size %] error[% END %]">
+    <label class="control-label" for="_[% name | html %]">[% l(name) %] (*)</label>
+    <div class="controls">
+      [% input(name='_' _ name,type=type,readonly=readonly,placeholder=l(name)) %]
+      <span class="help-inline[% IF errors.grep(name.upper).size %] error[% END %]">
+      </span>
+    </div>
+  </div>
+[% END %]
+
+<div>
+<form method="post" action="[% request.uri_for('/request/add') %]" class="form-horizontal">
+  <input type="hidden" name="func" value="add_submit"/>
+  <input type="hidden" name="embed" value="[% params.item('embed') %]"/>
+
+  [% FOREACH key IN ["name","contact","uid"] %]
+    [% control_group(name=key) %]
+  [% END %]
+
+  [% IF obj.request.record.match('^ser01') || obj.request.record.match('^rug0(2|3)') %]
+
+    <h4>[% l('when-requesting-a-journal-article-please-provide-the-following-fields') %]</h4>   
+    [% FOREACH key IN ["year","volume","issue","page"] %]
+      [% control_group(name=key) %]
+    [% END %]
+
+  [% END %]
+
+  [% IF obj.request.record.match('^ser01') %]
+
+    <input type="hidden" name="_type" value="consult"/>
+
+  [% ELSE %]
+
+    <div class="control-group">
+      <label class="control-label" for="_type">[% l('type') %] (*)</label>
+      <div class="controls">
+        <input type="radio" name="_type" value="borrow" [% IF params.item('_type') == 'borrow' %]checked="checked"[% END %]>[% l('i-want-to-borrow-this-work') %]<br>
+        <input type="radio" name="_type" value="consult" [% IF params.item('_type') == 'consult' %]checked="checked"[% END %]>[% l('i-want-to-read-this-work-in-the-library') %]
+      </div>
+    </div>
+
+  [% END %]
+
+  [% control_group(name='note',type='textarea') %]
+
+  [% control_group(name='record',readonly = 1 ) %]
+
+  [% IF obj.request.library %]
+
+    [% control_group(name='library',readonly=1) %]
+    [% IF obj.request.library.match('^DEPA') %]
+      <span style="color: green;"><img src="/app/img/clock.png"/> Delivery from depot DEPA only on Monday, Wednesday and Friday morning.</span>
+    [% ELSIF obj.request.library.match('^DEPB') %]
+      <span style="color: green;"><img src="/app/img/clock.png"/> Delivery from depot DEPB only on Monday, Wednesday and Friday morning.</span>
+    [% ELSIF obj.request.library.match('^DEPC') %]
+      <span style="color: green;"><img src="/app/img/clock.png"/> Delivery from depot DEPC only on <b>Monday</b>.</span>
+    [% END %]
+
+  [% END %]
+
+  [% IF obj.request.callnr %]
+    [% control_group(name='callnr',readonly=1) %]
+    <input type="hidden" name="_holding" value="[% params.item('_holding') %]" readonly="readonly"/>
+  [% ELSE %]
+    <table class="holding">
+      <tr>
+       <th>&nbsp;</th>
+       <th>[% l('pick-library') %]</th>
+       <th>[% l('pick-shelf') %]</th>
+       <th>[% l('pick-holding') %]</th>
+      </tr>
+      [%FOREACH loc IN obj.record.location %]
+        <tr>
+         <td>
+          <input type="radio" name="_bibcall" value="[% loc.bib %];[% loc.shelf %]"/>
+         </td>
+         <td>[% loc.bib %]</td>
+         <td>[% loc.shelf %]</td>
+         <td>[% loc.holding %]</td>
+       </tr>
+      [%END%]
+      [%IF obj.request.record.match('^rug0(2|3)') %]
+        <tr>
+         <td><input type="hidden" name="_bibcall" value="[% obj.request.library %];[% obj.request.library %]"/></td>
+         <td>[% obj.request.library %]</td>
+         <td>--</td>
+         <td>--</td>
+        </tr>
+      [%END%]
+    </table>
+  [% END %]
+
+  [% control_group(name='barcode',readonly=1) IF obj.request.barcode %]
+
+
+  <div class="control-group">
+    <div class="controls">
+      <label class="checkbox">
+        <input type="checkbox" name="remember" value="on">[% l('remember-me') %]
+      </label>
+    </div>
+  </div>
+
+  <button class="btn btn-primary" type="submit" name="submit">[% l('save-request') %]</button>
+</form>
+</div>

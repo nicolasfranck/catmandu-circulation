@@ -1,0 +1,218 @@
+[% INCLUDE header.tt %]
+
+[% INCLUDE menu_back.tt ctl="request" func="list" %]
+
+  <div id="main">
+
+<h1>Aanvraag &gt; Bekijken</h1>
+
+<div class="requestshort">
+ [% IF obj.request.mobile %]
+	<img src="/app/img/mobile.png" width="25" height="25" title="Mobile Request"/>
+ [% ELSE %]
+	<img src="/app/img/laptop.png" width="20" height="20" title="Desktop Request"/>
+ [% END %]
+
+ <em>[% obj.request.name | html %]</em>
+ stuurt een
+ <em>[% obj.request.type | html %]</em>
+ record 
+ <em>[% obj.request.record | html %]</em>
+ voor plaatsnummer
+ <em>[% obj.request.callnr | html %]</em>
+</div> 
+
+<table class="requestlong">
+<tr class="requestaction">
+ <th>
+ Status: [% obj.status | html %]
+ </th>
+ <td>
+[% IF obj.request.contact.match('.*@.*') %]
+  <a href="email?func=reply&amp;_id=[% obj.id %]"><img src="/app/img/email.png" title="Antwoord via Email" width="25" height="25"/></a> 
+[% ELSE %]
+  <a href="sms?func=reply&amp;_id=[% obj.id %]"><img src="/app/img/sms.png" title="Antwoord via SMS" width="20" height="20"/></a> 
+[% END %]
+  <a href="javascript:printMe('print?func=view&amp;_id=[% obj.id %]&store=1');"><img src="/app/img/print.png" title="Printen" width="20" height="20"/></a> [% count %]
+
+[% IF c.authen.username == 'admin' %]
+  <a href="javascript: if (confirm('Are you sure?')) { location.href='request?func=delete&amp;_id=[% obj.id %]';}" style="text-align: right;"><img src="/app/img/del.png" title="Wissen" width="21" height="20"/></a> 
+[% END %]
+ </td>
+</tr>
+<tr>
+ <th>Details</th>
+ <th>Aangevraagd werk</th>
+</tr>
+<tr>
+ <td style="vertical-align: top;">
+<table>
+ <tr>
+  <th>Id</th>
+  <td>[% obj.id | html %]</td>
+ </tr>
+ <tr>
+  <th>Van</th>
+  <td>[% obj.request.remote_addr | html %]</td>
+ </tr>
+ <tr>
+  <th>Naam</th>
+  <td>[% obj.request.name | html %]</td>
+ </tr>
+ <tr>
+  <th>Adres</th>
+  <td>[% obj.request.contact | html %]</td>
+ </tr>
+ <tr>
+  <th>Uid</th>
+  <td>[% obj.request.uid | html %]</td>
+ </tr>
+ <tr>
+  <th>Type</th>
+  <td>[% obj.request.type | html %]</td>
+ </tr>
+ <tr>
+  <th>Record</th>
+  <td>[% obj.request.record | html %]</td>
+ </tr>
+ <tr>
+  <th>Bibliotheek</th>
+  <td>[% obj.request.library | html %]</td>
+ </tr>
+ <tr>
+  <th>Call number</th>
+  <td>[% obj.request.callnr | html %]</td>
+ </tr>
+ <tr>
+  <th>Barcode</th>
+  <td>[% obj.request.barcode | html %]</td>
+ </tr>
+ <tr>
+  <th>Holding</th>
+  <td>[% obj.request.holding | html %]</td>
+ </tr>
+ <tr>
+  <th>Datum creatie</th>
+  <td>[% obj.created | html %]</td>
+ </tr>
+ <tr>
+  <th>Laatste aanpassing</th>
+  <td>[% obj.modified | html %]</td>
+ </tr>
+</table>
+ </td>
+ <td>
+[% IF obj.record %]
+[% INCLUDE request/parse_record.tt %]
+<table>
+ [% IF obj.request.year %]
+ <tr>
+  <th>Year</th>
+  <td>[% obj.request.year | html %]</td>
+ </tr>
+ [% END %]
+ [% IF obj.request.volume %]
+ <tr>
+  <th>Volume</th>
+  <td>[% obj.request.volume | html %]</td>
+ </tr>
+ [% END %]
+ [% IF obj.request.issue %]
+ <tr>
+  <th>Issue</th>
+  <td>[% obj.request.issue | html %]</td>
+ </tr>
+ [% END %]
+ [% IF obj.request.page %]
+ <tr>
+  <th>Page</th>
+  <td>[% obj.request.page | html %]</td>
+ </tr>
+ [% END %]
+ [% IF obj.request.note %]
+ <tr>
+  <th>Note</th>
+  <td>[% obj.request.note | html %]</td>
+ </tr>
+ [% END %]
+</table>
+[% ELSE %]
+No record identifier in current request
+[% END %]
+ </td>
+</tr>
+<tr>
+<td colspan="2">
+<em style="font-size: 110%;">Email Log</em>
+
+<table class="list" style="width: 100%;">
+ <tr>
+   <th style="width: 150px;">Datum</th>
+   <th style="width: 80px;">Van</th>
+   <th style="width: 150px;">Aan</th>
+   <th>Subject</th>
+   <th style="width: 150px;">Functies</th>
+ </tr>
+ [% FOREACH obj IN email %]
+   <tr>
+   <td>[% obj.created | html %]</td>
+   <td>[% obj.replied_by | html %]</td>
+   <td>[% obj.contact | html %]</td>
+   <td>[% obj.subject | html %]</td>
+   <td>
+     <a href="email?func=view&amp;_id=[% obj.id | html %]">View</a> 
+   </td>
+   </tr>
+ [% END %]
+</table>
+
+<br/>
+
+<em style="font-size: 110%;">SMS Log</em>
+
+<table class="list" style="width: 100%;">
+ <tr>
+   <th style="width: 150px;">Datum</th>
+   <th style="width: 80px;">Van</th>
+   <th style="width: 150px;">Aan</th>
+   <th>Bericht</th>
+   <th style="width: 150px;">Functies</th>
+ </tr>
+ [% FOREACH obj IN sms %]
+   <tr>
+   <td>[% obj.created | html %]</td>
+   <td>[% obj.replied_by | html %]</td>
+   <td>[% obj.contact | html %]</td>
+   <td>[% obj.body | html %]</td>
+   <td>
+     <a href="sms?func=view&amp;_id=[% obj.id | html %]">Bekijken</a> 
+   </td>
+   </tr>
+ [% END %]
+</table>
+
+<br/>
+
+<em style="font-size: 110%;">Print Log</em>
+
+<table class="list" style="width: 100%;">
+ <tr>
+   <th style="width: 150px;">Datum</th>
+ </tr>
+ [% FOREACH obj IN print %]
+   <tr>
+   <td>[% obj.created | html %]</td>
+   </tr>
+ [% END %]
+</table>
+
+<br/>
+
+
+</td>
+</tr>
+</table>
+
+</div>
+
+[% INCLUDE footer.tt %]

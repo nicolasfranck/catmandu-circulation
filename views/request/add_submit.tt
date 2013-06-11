@@ -1,0 +1,5 @@
+[% IF c.query.param('mobile') == 1 %]
+  [%INCLUDE request/add_submit_mobile.tt %]
+[% ELSE %]
+  [%INCLUDE request/add_submit_full.tt %]
+[% END %]

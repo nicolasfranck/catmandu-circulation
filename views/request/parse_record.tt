@@ -1,0 +1,85 @@
+<div>
+<table>
+[% IF obj.record.card %]
+<tr>
+ <td colspan="2">
+ [% IF settings.ssl.active %]
+  <img src="[% obj.record.card_url.replace("http://","https://") %]"/>
+ [% ELSE %]
+  <img src="[% obj.record.card_url %]"/>
+ [% END %]
+ </td>
+</tr>
+[%END%]
+[%IF obj.record.title %]
+ <tr>
+  <th>[% l('title') %]</th>
+  <td>[% obj.record.title | html %]</td>
+ </tr>
+[%END%]
+[%IF obj.record.author %]
+ <tr>
+  <th>[% l('author') %]</th>
+  <td>[% obj.record.author | html %]</td>
+ </tr>
+[%END%]
+[%IF obj.record.publisher %]
+ <tr>
+  <th>[% l('publisher') %]</th>
+  <td>[% obj.record.publisher | html %]</td>
+ </tr>
+[%END%]
+[%IF obj.record.dateIssued %]
+ <tr>
+  <th>[% l('date-issued') %]</th>
+  <td>[% obj.record.dateIssued | html %]</td>
+ </tr>
+[%END%]
+[%IF obj.record.description %]
+ <tr>
+  <th>[% l('description') %]</th>
+  <td>[% obj.record.description | html %]</td>
+ </tr>
+[%END%]
+[%IF obj.record.isbn || obj.record.issn %] 
+ <tr>
+  <th>[% l('isbn') %]</th>
+  <td>[% obj.record.isbn | html %] [% obj.record.issn | html %]</td>
+ </tr>
+[%END%]
+[%IF obj.record.series %]
+ <tr>
+  <th>[% l('series') %]</th>
+  <td>[% obj.record.series | html %]</td>
+ </tr>
+[%END%]
+[%IF obj.record.year %]
+ <tr>
+  <th>[% l('year-volume-pages') %]</th>
+  <td>
+   [% obj.record.year | html %] [% obj.record.volume | html %] [% obj.record.issue | html %] [% obj.record.page | html %]
+  </td>
+ </tr>
+[%END%]
+[%IF obj.record.availability %]
+ <tr>
+   <th>[% l('availability') %]</th>
+   <td>
+	([% obj.record.availability.status | html %])
+	[% obj.record.availability.code | html %]
+	library
+   </td>
+ </tr>
+[%END%]
+[%IF obj.record.location %]
+ <tr>
+   <th>[% l('alt_callnr') %]</th>
+   <td>
+    [% FOREACH loc IN obj.record.location %]
+	[% loc.shelf %] [% loc.holding %];
+    [% END %]
+   </td>
+ </tr>
+[%END%]
+</table>
+</div>

@@ -1,0 +1,93 @@
+[% INCLUDE header.tt %]
+
+[% INCLUDE menu_main.tt %]
+
+  <div id="main">
+
+<h1>Aanvragen: [% found %] resultaten</h1>
+
+<p>
+<a href="?func=list">Alles</a> | 
+<a href="?func=list&q=status_s%3ANEW">NEW</a> | 
+<a href="?func=list&q=status_s%3ANEW+AND+date_dt:[*+TO+[%yesterday%]]">CHALLENGED</a> | 
+<a href="?func=list&q=status_s%3AREPLIED">REPLIED</a> |
+<a href="?func=list&q=availability_s%3AX*">ALEPH</a> |
+<a href="?func=list&q=status_s%3AERROR">ERROR</a>
+</p>
+
+
+<form class="query" onSubmit="listQuery(this);">
+ <input type="hidden" name="func" value="list"/>
+ <input type="text" name="q" value="[% c.query.param('q') | html %]"/>
+ <input type="checkbox" name="exact"> exacte match
+ <input type="submit" value="Zoeken"/>
+</form>
+
+[%IF start >= num %]
+   <a href="?func=list&amp;start=[% start - num %]&amp;q=[% c.query.param('q') | html %]">&lt;&lt; Vorige</a>
+[%END%]
+
+[%IF objects.size == num %]
+ <a href="?func=list&amp;start=[% start + num %]&amp;q=[% c.query.param('q') | html %]"> Volgende &gt;&gt;</a>
+[%END%]
+
+<table class="list">
+ <tr>
+   <th>Via</th>
+   <th>Datum</th>
+   <th>Van</th>
+   <th>Plaatsnummer</th>
+   <th>Bibliotheek</th>
+   <th>Status</th>
+   <th>Functies</th>
+   <th>&nbsp;</th>
+ </tr>
+ [% FOREACH obj IN objects %]
+  [% IF obj.status == 'NEW' %]
+   <tr style="background-color: #fff; font-weight: bold;">
+  [% ELSE %]
+   <tr style="background-color: #efefef;">
+  [% END %]
+     <td style="width: 20px;">
+        [% IF obj.request.mobile %]
+			<img src="/app/img/mobile.png" width="20" height="20" title="Mobile Request"/>
+		[% ELSE %]
+			<img src="/app/img/laptop.png" width="20" height="20" title="Desktop Request"/>
+		[% END %]
+	 </td>
+     	 <td nowrap="nowrap">[% obj.created | html %]</td>
+	 <td>[% obj.request.name | html %]</td>
+	 <td width="250">[% obj.request.callnr | html %]</td>
+	 <td>[% obj.request.library | html %]</td>
+     <td>[% obj.status | html %]</td>
+     <td nowrap="nowrap">
+		<a href="?func=view&amp;_id=[% obj.id %]"><img src="/app/img/view.png" title="Bekijken" width="20" height="20"/></a> 
+[% IF obj.request.contact.match('.*@.*') %]
+    <a href="email?func=reply&amp;_id=[% obj.id %]"><img src="/app/img/email.png" title="Email" width="25" height="25"/></a> 
+[% ELSE %]
+    <a href="sms?func=reply&amp;_id=[% obj.id %]"><img src="/app/img/sms.png" title="SMS" width="20" height="20"/></a> 
+[% END %]
+    <a href="javascript:printMe('print?func=view&amp;_id=[% obj.id %]&store=1');"><img src="/app/img/print.png" title="Print" width="20" height="20"/></a> [% obj.print.count %]
+	 </td>
+   <td>
+[% IF obj.record.availability.status == 'XA' || obj.record.availability.status == 'XB' %]
+   <font color="#990000">*aleph*</font>
+[% END %]
+   </td>
+   </tr>
+ [% END %]
+</table>
+
+[%IF start >= num %]
+   <a href="?func=list&amp;start=[% start - num %]&amp;q=[% c.query.param('q') | html %]">&lt;&lt; Vorige</a>
+[%END%]
+
+[%IF objects.size == num %]
+ <a href="?func=list&amp;start=[% start + num %]&amp;q=[% c.query.param('q') | html %]"> Volgende &gt;&gt;</a>
+[%END%]
+
+
+
+</div>
+
+[% INCLUDE footer.tt %]

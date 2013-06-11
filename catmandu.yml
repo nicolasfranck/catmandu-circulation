@@ -1,0 +1,33 @@
+# Configuration file for Catmandu Framework
+store:
+  default:
+    package: "Catmandu::Store::DBI"
+    options:
+      data_source: "dbi:mysql:database=circulation_catmandu"
+      username: circulation
+      password: circulation
+  searcher:
+    package: "Catmandu::Store::Solr"
+    options:
+      url: "http://localhost:8984/solr/circulation"
+
+request:
+  isa:
+    _name: "NonEmptyStr"
+    _contact: "NonEmptyStr"
+    _record: "RecordId"
+    _library: "NonEmptyStr"
+    _uid: "NonEmptyStr"
+    _type: "NonEmptyStr"
+    _note: "NonEmptyStr"
+    _callnr: "NonEmptyStr"
+
+  required_keys:
+    - _name
+    - _contact    
+    - _record    
+    - _library    
+    - _uid    
+    - _type    
+    - _note    
+    - _callnr

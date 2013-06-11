@@ -1,0 +1,10 @@
+<form method="POST" style="margin-bottom: 10px;">
+ <table class="add">
+   <tr>
+	 <th>[% l('sorry') %]</th>
+	 <td>
+    [% l('this-work-cant-be-requested-online') %]
+	 </td>
+   </tr>
+ </table>
+</form>

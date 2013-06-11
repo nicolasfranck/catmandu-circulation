@@ -1,0 +1,14 @@
+[%- SET embed = 1 %]
+[% INCLUDE header.tt title="Request from library" %]
+
+  <div id="menu-main">
+   <ul>
+    <li><a href="javascript:history.go(-3);">&lt;&lt; Back</a></li>
+   </ul>
+  </div>
+
+  <div id="main">
+  <h1>Thank you</h1>
+  </div>
+
+[% INCLUDE footer.tt %]

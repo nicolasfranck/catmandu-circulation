@@ -1,0 +1,333 @@
+/*=====reset=====*/
+
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, 
+p, blockquote, pre, a, abbr, acronym, address, code, del, dfn, 
+em, img, q, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, 
+table, caption, tbody, tfoot, thead, tr, th, td, 
+hr {
+  margin:  0;
+  padding: 0;
+  border:  0;
+  vertical-align: baseline;
+  font-weight: inherit;
+  font-style:  inherit;
+  font-size:   100%;
+  font-family: inherit;
+}
+
+body {
+  background: #ffffff;
+}
+
+a {
+  text-decoration: none;
+}
+
+a img {
+  border: none;
+}
+
+iframe {
+  float: none;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+/*=====boxes=====*/
+
+.item, .line {
+  clear: left;
+  padding-top: 12px;
+}
+
+.line .item {
+  clear: none;
+  float: left;
+  width: 298px;
+  padding-top:   0;
+  padding-right: 24px;
+}
+
+.line .item.last {
+  padding-right: 0;
+}
+
+/*=====structure=====*/
+
+body {
+  margin-top:    12px;
+  margin-bottom: 12px;
+}
+
+#head, #main, #info, #menu-main ul {
+  position: relative;
+  overflow: hidden;
+  margin-left:  auto;
+  margin-right: auto;
+  width: 942px;
+}
+
+#head {
+  height: 112px;
+}
+
+#info {
+  height: 72px;
+  margin-top: 12px;
+}
+
+#content-one, #content-two { float: left; margin-bottom: -12px; padding-bottom: 12px; }
+#content-one { width: 644px; margin-right: -298px; border-right: 298px solid #f2f2f2; }
+#content-two { background-color: #f2f2f2; }
+#content-one .item { padding-right: 24px; }
+#content-two .item { width: 274px; padding-left: 12px; padding-right: 12px; }
+
+/*=====typography & colors=====*/
+
+body {
+  font-family: "Lucida Sans", "Lucida Sans Unicode", Verdana, sans-serif;
+  font-size:  12px;
+  line-height: 18px;
+  color: #2f4551;
+}
+
+#info {
+  font-size: 10px;
+}
+
+
+#main {
+  padding-bottom: 12px;
+}
+
+ul, li, dt, dd, p {
+  margin-top: 6px;
+}
+
+
+button {
+  border:  0;
+  padding: 3px 6px;
+  color:      #ffffff;
+  background: #121d22;
+  font-size: 12px;
+}
+
+
+ul {
+  list-style-type: square;
+  margin-left: 12px;
+}
+
+strong, em, dt {
+  font-weight: bold;
+  color: #121d22;
+}
+
+a:link, a:visited, a:focus, a:hover, a:active {
+  color: #8d0e3a;
+}
+
+a:focus, a:hover, a:active {
+  border-bottom: 1px dotted #8d0e3a;
+}
+
+.ruler {
+/*  margin-top: 12px;*/
+  height: 2px;
+  background-color: #121d22;
+}
+
+.ruler hr {
+  display: none;
+}
+
+#menu-utility {
+  position: absolute;
+  top:   0;
+  right: 0;
+}
+
+#menu-main {
+  background: #121d22;
+}
+
+#menu-main ul {
+  list-style: none;
+}
+
+#menu-main ul li {
+  margin: 0 24px 0 0;
+  float: left;
+  height: 36px;
+}
+
+#menu-main ul li.last {
+  margin-right: 0;
+}
+
+#menu-main ul li a {
+  display: block;
+/*  margin-top:6px;*/
+  font-size: 14px;
+  font:  14px Verdana, "Lucida Sans", "Lucida Sans Unicode", sans-serif;
+  color: #ffffff;
+  line-height: 36px;
+}
+
+#menu-main ul li a:focus, #menu-main ul li a:hover, #menu-main ul li a:active, #menu-main ul li a.current {
+  background: #121d22 url(/meercat/assets/images/menu-current.png) no-repeat scroll bottom center;
+}
+
+#main a {
+  font-family: Consolas, Courier, "Courier New", monospace; 
+  font-weight: bold; 
+}
+
+#main h1, #main h1 a {
+  margin-top: 24px;
+  font:  24px Georgia, "Palatino Linotype", Palatino, serif;
+  color: #121d22;
+}
+
+#main h1 a {
+  border: 0;
+}
+
+#main h2 {
+  position: relative;
+  border-bottom: 1px solid #8d0e3a;
+  font:  16px Georgia, "Palatino Linotype", Palatino, serif;
+  line-height: 24px;
+  color: #8d0e3a;
+}
+
+#main h2 a:hover {
+  border-bottom: none;
+}
+
+#main h2 .right {
+  position: absolute;
+  right: 0;
+  bottom: 6px;
+  margin: 0;
+  padding: 0;
+}
+
+#main h3 {
+  border-bottom: 1px dotted #2f4551;
+  font:  16px Georgia, "Palatino Linotype", Palatino, serif;
+  line-height: 24px;
+  color: #121d22;
+}
+
+#main h4 {
+  margin-top: 12px;
+  font:  16px Georgia, "Palatino Linotype", Palatino, serif;
+  color: #121d22;
+}
+
+#main h5, iframe {
+  margin-top: 6px;
+}
+
+#main table, #main caption {
+  margin-top: 6px;
+}
+
+
+#site-title {
+  
+}
+
+#site-title h1 {
+  display: none;
+}
+
+#site-institution {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#site-legal {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+table {
+  
+}
+
+tr.alt {
+  background: #f2f2f2;
+}
+
+th {
+  text-align: left;
+  background: #505050;
+  color: #ffffff;
+}
+
+th, td {
+  padding: 6px;
+}
+
+table.calendar {
+}
+
+table.calendar th {
+  width: 74px;
+}
+
+caption {
+  text-align: left;
+  font-weight: bold;
+  color: #121d22;
+}
+
+.highlight {
+  background: #b5d5ff;
+}
+
+.notes {
+  font-size:  10px;
+}
+
+img.icon {
+  vertical-align: text-bottom;
+  margin-right: 6px;
+}
+
+#bookmark {
+	font:  12px Georgia, "Palatino Linotype", Palatino, serif;
+	font-style:italic;
+	padding-bottom:10px;
+}
+
+#bookmark a, #bookmark a:focus, #bookmark a:hover, #bookmark a:active {
+	border-bottom:0px solid black;
+}
+
+#bookmark a	img {
+	margin-left:-15px;
+	border:0px solid black;
+	float:left;
+	margin-right: 0px;
+	padding-bottom:10px;
+
+}
+
+.item p img {
+padding:3px;
+border:1px solid black;
+float:left;
+margin-right: 10px;
+}
+
+.item select {
+  width: 274px;
+}

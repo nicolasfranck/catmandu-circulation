@@ -1,0 +1,41 @@
+msgid "search"
+msgstr "Zoek"
+
+msgid "signed-in-as"
+msgstr "Aangemeld als"
+
+msgid "marked"
+msgstr "Gemarkeerd"
+
+msgid "saved"
+msgstr "Opgeslagen zoekopdrachten"
+
+msgid "developed-by"
+msgstr "Ontwikkeld door"
+
+msgid "author"
+msgstr "auteur"
+
+msgid "year"
+msgstr "jaar"
+
+msgid "faculty"
+msgstr "faculteit"
+
+msgid "issn"
+msgstr "ISSN"
+
+msgid "isbn"
+msgstr "ISBN"
+
+msgid "library"
+msgstr "bibliotheek"
+
+msgid "location"
+msgstr "plaats"
+
+msgid "department"
+msgstr "afdeling"
+
+msgid "did-you-mean"
+msgstr "bedoelde u"

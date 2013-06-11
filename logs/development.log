@@ -1,0 +1,69 @@
+[28693] error @0.001996> [hit #2]request to GET /login crashed: Can't locate Dancer/Plugin/Auth/RBAC/Credentials/LDAP.pm in @INC (@INC contains: /home/njfranck/git/catmandu-circulation/lib /usr/local/lib64/perl5 /usr/local/share/perl5 /usr/lib64/perl5/vendor_perl /usr/share/perl5/vendor_perl /usr/lib64/perl5 /usr/share/perl5 .) at /usr/local/share/perl5/Dancer/Plugin/Auth/RBAC.pm line 38. in /usr/local/share/perl5/Dancer/Handler.pm l. 98
+[29501] error @0.002002> [hit #9]request to POST /login crashed: Undefined subroutine &Circulation::App::Login::Dumper called at /home/njfranck/git/catmandu-circulation/lib/Circulation/App/Login.pm line 16. in /usr/local/share/perl5/Dancer/Handler.pm l. 98
+[29600] error @0.006389> [hit #9]request to POST /login crashed: Can't call method "opts" on an undefined value at /home/njfranck/git/catmandu-circulation/lib/Dancer/Plugin/Auth/RBAC/Credentials/LDAP.pm line 67. in /usr/local/share/perl5/Dancer/Handler.pm l. 98
+[2784] error @0.013219> [hit #3]request to GET /request/add crashed: Null filename used at (eval 218) line 1.
+
+
+Trace begun at /usr/local/share/perl5/Catmandu/Util.pm line 511
+Catmandu::Util::require_package(undef) called at /home/njfranck/git/catmandu-circulation/lib/Circulation/App/Request.pm line 30
+Circulation::App::Request::parser_request at /home/njfranck/git/catmandu-circulation/lib/Circulation/App/Request.pm line 44
+Circulation::App::Request::parse_request at /home/njfranck/git/catmandu-circulation/lib/Circulation/App/Request.pm line 19
+Circulation::App::Request::__ANON__ at /usr/local/share/perl5/Dancer/Route.pm line 263
+Dancer::Route::execute('Dancer::Route=HASH(0x2a17060)') called at /usr/local/share/perl5/Dancer/Route.pm line 177
+Dancer::Route::__ANON__ at /usr/local/share/perl5/Try/Tiny.pm line 71
+eval {...} at /usr/local/share/perl5/Try/Tiny.pm line 67
+Try::Tiny::try('CODE(0x2a26770)', 'Try::Tiny::Catch=REF(0x28eae90)') called at /usr/local/share/perl5/Dancer/Route.pm line 191
+Dancer::Route::run('Dancer::Route=HASH(0x2a17060)', 'Dancer::Request=HASH(0x2a266f8)') called at /usr/local/share/perl5/Dancer/Renderer.pm line 134
+Dancer::Renderer::__ANON__ at /usr/local/share/perl5/Try/Tiny.pm line 76
+eval {...} at /usr/local/share/perl5/Try/Tiny.pm line 67
+Try::Tiny::try('CODE(0x10a38e8)', 'Try::Tiny::Catch=REF(0x273a7f0)') called at /usr/local/share/perl5/Dancer/Renderer.pm line 143
+Dancer::Renderer::get_action_response('Dancer::Renderer') called at /usr/local/share/perl5/Dancer/Renderer.pm line 31
+Dancer::Renderer::render_action('Dancer::Renderer') called at /usr/local/share/perl5/Dancer/Handler.pm line 84
+Dancer::Handler::__ANON__ at /usr/local/share/perl5/Try/Tiny.pm line 71
+eval {...} at /usr/local/share/perl5/Try/Tiny.pm line 67
+Try::Tiny::try('CODE(0x24c5d70)', 'Try::Tiny::Catch=REF(0x292d100)') called at /usr/local/share/perl5/Dancer/Handler.pm line 113
+Dancer::Handler::render_request('Dancer::Request=HASH(0x2a266f8)') called at /usr/local/share/perl5/Dancer/Handler.pm line 76
+Dancer::Handler::handle_request('Dancer::Handler', 'Dancer::Request=HASH(0x2a266f8)') called at /usr/local/share/perl5/Dancer.pm line 475
+Dancer::_start('Dancer', 'Dancer::Request=HASH(0x2a266f8)') called at /home/njfranck/git/catmandu-circulation/bin/app.psgi line 14
+Plack::Sandbox::_2fhome_2fnjfranck_2fgit_2fcatmandu_2dcirculation_2fbin_2fapp_2epsgi::__ANON__('HASH(0x2b49e08)') called at /usr/local/share/perl5/Plack/App/URLMap.pm line 71
+Plack::App::URLMap::call('Plack::App::URLMap=HASH(0x2a17048)', 'HASH(0x2b49e08)') called at /usr/local/share/perl5/Plack/Component.pm line 50
+Plack::Component::__ANON__('HASH(0x2b49e08)') called at /usr/local/share/perl5/Plack/Middleware/Lint.pm line 24
+Plack::Middleware::Lint::call('Plack::Middleware::Lint=HASH(0x252e158)', 'HASH(0x2b49e08)') called at /usr/local/share/perl5/Plack/Component.pm line 50
+Plack::Component::__ANON__('HASH(0x2b49e08)') called at /usr/local/share/perl5/Plack/Middleware/StackTrace.pm line 31
+Plack::Middleware::StackTrace::__ANON__ at /usr/local/share/perl5/Try/Tiny.pm line 71
+eval {...} at /usr/local/share/perl5/Try/Tiny.pm line 67
+Try::Tiny::try('CODE(0x2a262a8)', 'Try::Tiny::Catch=REF(0x28eae60)') called at /usr/local/share/perl5/Plack/Middleware/StackTrace.pm line 35
+Plack::Middleware::StackTrace::call('Plack::Middleware::StackTrace=HASH(0x2a16bc8)', 'HASH(0x2b49e08)') called at /usr/local/share/perl5/Plack/Component.pm line 50
+Plack::Component::__ANON__('HASH(0x2b49e08)') called at /usr/local/share/perl5/Plack/Middleware/AccessLog.pm line 24
+Plack::Middleware::AccessLog::call('Plack::Middleware::AccessLog=HASH(0x2a17780)', 'HASH(0x2b49e08)') called at /usr/local/share/perl5/Plack/Component.pm line 50
+Plack::Component::__ANON__('HASH(0x2b49e08)') called at /usr/local/share/perl5/Plack/Middleware/ContentLength.pm line 10
+Plack::Middleware::ContentLength::call('Plack::Middleware::ContentLength=HASH(0x29f22e8)', 'HASH(0x2b49e08)') called at /usr/local/share/perl5/Plack/Component.pm line 50
+Plack::Component::__ANON__('HASH(0x2b49e08)') called at /usr/local/share/perl5/Plack/Util.pm line 142
+eval {...} at /usr/local/share/perl5/Plack/Util.pm line 142
+Plack::Util::run_app('CODE(0x2a1b980)', 'HASH(0x2b49e08)') called at /usr/local/share/perl5/HTTP/Server/PSGI.pm line 170
+HTTP::Server::PSGI::handle_connection('HTTP::Server::PSGI=HASH(0x29fb040)', 'HASH(0x2b49e08)', 'IO::Socket::INET=GLOB(0x2a261a0)', 'CODE(0x2a1b980)') called at /usr/local/share/perl5/HTTP/Server/PSGI.pm line 129
+HTTP::Server::PSGI::accept_loop('HTTP::Server::PSGI=HASH(0x29fb040)', 'CODE(0x29fae78)') called at /usr/local/share/perl5/HTTP/Server/PSGI.pm line 55
+HTTP::Server::PSGI::run('HTTP::Server::PSGI=HASH(0x29fb040)', 'CODE(0x29fae78)') called at /usr/local/share/perl5/Plack/Handler/HTTP/Server/PSGI.pm line 14
+Plack::Handler::HTTP::Server::PSGI::run('Plack::Handler::Standalone=HASH(0x2a1bc08)', 'CODE(0x29fae78)') called at /usr/local/share/perl5/Plack/Loader.pm line 84
+Plack::Loader::run('Plack::Loader=HASH(0x10e9910)', 'Plack::Handler::Standalone=HASH(0x2a1bc08)') called at /usr/local/share/perl5/Plack/Runner.pm line 277
+Plack::Runner::run('Plack::Runner=HASH(0xf5f908)') called at /usr/local/bin/plackup line 10 in /usr/local/share/perl5/Dancer/Handler.pm l. 98
+[2927] error @0.039594> [hit #1]request to GET /request/add crashed: Use of uninitialized value in string eq at /home/njfranck/git/catmandu-circulation/lib/Circulation/Parser/Request.pm line 103. in /usr/local/share/perl5/Dancer/Handler.pm l. 98
+[9156] error @0.256904> [hit #7]request to GET /request/add crashed: core - template - undef error - maketext doesn't know how to say:
+back
+as needed at /usr/local/share/perl5/Dancer/Plugin/Lexicon.pm line 80.
+ at /usr/local/share/perl5/Dancer/Template/Abstract.pm line 89. in /usr/local/share/perl5/Dancer/Handler.pm l. 98
+[9156] error @0.261635> [hit #47]request to GET /request/add crashed: core - template - undef error - maketext doesn't know how to say:
+back
+as needed at /usr/local/share/perl5/Dancer/Plugin/Lexicon.pm line 80.
+ at /usr/local/share/perl5/Dancer/Template/Abstract.pm line 89. in /usr/local/share/perl5/Dancer/Handler.pm l. 98
+[9346] error @0.329194> [hit #1]request to GET /request/add crashed: core - template - undef error - maketext doesn't know how to say:
+back
+as needed at /usr/local/share/perl5/Dancer/Plugin/Lexicon.pm line 80.
+ at /usr/local/share/perl5/Dancer/Template/Abstract.pm line 89. in /usr/local/share/perl5/Dancer/Handler.pm l. 98
+[18283] error @0.276893> [hit #4]request to GET /request/add crashed: core - template - file error - shared/search_box.tt: not found at /usr/local/share/perl5/Dancer/Template/Abstract.pm line 89. in /usr/local/share/perl5/Dancer/Handler.pm l. 98
+[19555] error @0.259229> [hit #50]request to GET /request/add crashed: core - template - file error - parse error - request/form.tt line 1: unexpected token (=)
+  [% MACRO control_group(key,readonly=false) BLOCK %] at /usr/local/share/perl5/Dancer/Template/Abstract.pm line 89. in /usr/local/share/perl5/Dancer/Handler.pm l. 98
+[19555] error @0.259572> [hit #53]request to GET /request/add crashed: core - template - file error - parse error - request/form.tt line 6: unexpected end of directive
+  [% DEFAULT %] at /usr/local/share/perl5/Dancer/Template/Abstract.pm line 89. in /usr/local/share/perl5/Dancer/Handler.pm l. 98
+[19555] error @0.284160> [hit #59]request to GET /request/add crashed: core - template - file error - parse error - request/form.tt line 100: unexpected token (END)
+  [% END %] at /usr/local/share/perl5/Dancer/Template/Abstract.pm line 89. in /usr/local/share/perl5/Dancer/Handler.pm l. 98

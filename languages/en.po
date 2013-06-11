@@ -1,0 +1,41 @@
+msgid "search"
+msgstr "Search"
+
+msgid "signed-in-as"
+msgstr "Signed in as"
+
+msgid "marked"
+msgstr "Marked"
+
+msgid "saved"
+msgstr "Saved"
+
+msgid "developed-by"
+msgstr "Developed by"
+
+msgid "author"
+msgstr "author"
+
+msgid "year"
+msgstr "year"
+
+msgid "faculty"
+msgstr "faculty"
+
+msgid "issn"
+msgstr "ISSN"
+
+msgid "isbn"
+msgstr "ISBN"
+
+msgid "library"
+msgstr "library"
+
+msgid "location"
+msgstr "location"
+
+msgid "department"
+msgstr "department"
+
+msgid "did-you-mean"
+msgstr "Did you mean"

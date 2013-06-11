@@ -1,0 +1,5 @@
+[% IF params.mobile == 1 %]
+  [% INCLUDE request/add_mobile.tt %]
+[% ELSE %]
+  [% INCLUDE request/add_full.tt %]
+[% END %]

@@ -1,0 +1,7 @@
+[% INCLUDE header_mobile.tt title="Request from library" %]
+
+  <div id="main">
+  <h1>Thank you</h1>
+  </div>
+
+[% INCLUDE footer_mobile.tt %]

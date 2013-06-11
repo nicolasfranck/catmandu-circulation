@@ -1,0 +1,67 @@
+<form method="POST">
+<input type="hidden" name="func" value="add_submit"/>
+<input type="hidden" name="mobile" value="1"/>
+<input type="hidden" name="_mobile" value="1"/>
+<b>Name:</b><br/>
+<input type="text" name="_name" /> [% err_name %]<br/>
+<br/>
+
+<b>E-mail or GSM number:</b><br/>
+<input type="text" name="_contact" /> [% err_contact %]<br/>
+<br/>
+
+<b>UGent ID:</b><br/>
+<input type="text" name="_uid" /> [% err_uid %]<br/>
+<br/>
+
+[%IF obj.request.record.match('^ser01') || obj.request.record.match('^rug0(2|3)') %]
+<b>When requesting a journal article please provide the following fields:</b><br/>
+<em>Year:</em>
+<input type="text" name="_year"  size="4"> 
+<em>Vol./Month:</em>
+<input type="text" name="_volume"  size="4">
+<br/>
+<em>Issue:</em>
+<input type="text" name="_issue"  size="4"> 
+<em>Page:</em>
+<input type="text" name="_page"  size="4"> 
+[% err_year %] [% err_volume %] [% err_issue %] [% err_page %]<br/>
+<br/>
+[%END%]
+
+[%IF obj.request.record.match('^ser01') %]
+<input type="hidden" name="_type" value="consult"/>
+[% ELSE %]
+<b>Choose one action:</b> [% err_type %]<br/>
+<input type="radio" name="_type" value="borrow"/> 
+			I want to borrow this work (if possible)<br/>
+<input type="radio" name="_type" value="consult"/> 
+			I want to read this work in the library<br/>
+<br/>
+
+[%END %]
+
+[% IF obj.request.library %]
+<input type="hidden" name="_library"  readonly="readonly"/>
+[%END%]
+
+<input type="hidden" name="_record" />
+
+<b>Choose a library or item:</b>
+		[% err_callnr %]
+<br/>
+
+[%IF obj.request.callnr %]
+		<input type="hidden" name="_callnr"/><b>[% obj.request.callnr %]</b> 
+[%ELSE%]
+ [%FOREACH loc IN obj.record.location %]
+    <input type="radio" name="_bibcall" value="[% loc.bib %];[% loc.shelf %]">
+   [% loc.bib %]
+   [% loc.shelf %]
+   [% loc.holding %]
+    <br/> 
+ [%END%]
+[%END%]
+<br/>
+<input type="submit" value="Send"/>
+</form>

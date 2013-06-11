@@ -1,0 +1,11 @@
+[% IF obj.record.location && obj.record.location.size >= 1 %]
+ [% canrequest = 1 %]
+[%ELSE%]
+ [% canrequest = 0 %]
+[%END%]
+<h2>Request item from library</h2>
+[% IF canrequest == 1 %]
+  [% INCLUDE request/form_mobile.tt %]
+[% ELSE %]
+  [% INCLUDE request/no_form.tt %]
+[% END %]

@@ -1,0 +1,311 @@
+# main configuration file
+
+session: "cookie"
+session_cookie_key: "meercat"
+session_expires: "1 hour"
+
+charset: "UTF-8"
+template: template_toolkit
+#layout: main
+
+cas: &cas
+  casUrl: "https://localhost/cas"
+
+engines:
+ template_toolkit:
+  encoding:  'utf8'
+  start_tag: '[%'
+  end_tag:   '%]'
+  ENCODING: "UTF-8"
+  PRIVATE: 1
+  TRIM: 1
+  EVAL_PERL: 1
+  ANYCASE: "no"
+  #WRAPPER: layouts/main.tt
+ serializer:
+  json:
+   pretty: 0
+
+app:
+  export:
+    json: 
+      default_style: marc_in_json
+      styles:
+        marc_in_json:
+          content_type: "application/json"
+          fixer: marc2json
+          exporter: json
+    xml:
+      default_style: marcxml
+      styles:
+        marcxml: &marcxml
+          content_type: 'application/xml'
+          fixer: marc2xml
+          exporter: output
+        marc_xml: *marcxml
+        oai_dc: &oaidc
+          content_type: 'application/xml'
+          fixer: marc2oaidcxml
+          exporter: output
+        oaidc: *oaidc
+        dc: *oaidc
+        mods: 
+          content_type: 'application/xml'
+          fixer: marc2modsxml
+          exporter: output
+
+    ris:
+      default_style: ris
+      styles:
+        ris: 
+          content_type: "application/x-research-info-systems"
+          fixer: marc2ris
+          exporter: output
+
+plugins:  
+  'Catmandu::OAI':
+    store: search
+    bag: child
+    limit: 200
+    repositoryName: Ghent University Catalogue
+    adminEmail: libservice@ugent.be
+    earliestDatestamp: "1970-01-01T00:00:01Z"
+    deletedRecord: persistent
+    repositoryIdentifier: "search.ugent.be"
+    delimiter: ":"
+    sampleIdentifier: "oai:search.ugent.be:rug01:000000001"
+    datestamp_field: datestamp
+    sets:
+      - setSpec: "all"
+        setName: "All records"
+        cql: "cql.allRecords"
+
+      - setSpec: "rug01"
+        setName: "rug01"
+        cql: "source=rug01"
+
+      - setSpec: "rug02"
+        setName: "rug02"
+        cql: "source=rug02"
+
+      - setSpec: "ser01"
+        setName: "ser01"
+        cql: "source=ser01"
+
+      - setSpec: "ejn01"
+        setName: "ejn0101"
+        cql: "source=ejn01"
+
+    metadata_formats:
+      - metadataPrefix: marcxml
+        schema: "http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd"
+        metadataNamespace: "http://www.loc.gov/MARC21/slim"
+        template: "views/export/output.tt"
+        fix:
+          #oai heeft datestamp nodig!
+          - copy_field('fDATE','y')
+          - copy_field('fDATE','m')
+          - copy_field('fDATE','d')
+          - substring('y',0,4)
+          - substring('m',4,2)
+          - substring('d',6,2)
+          - copy_field('y','datestamp.$append')
+          - copy_field('m','datestamp.$append')
+          - copy_field('d','datestamp.$append')
+          - join_field('datestamp','-')
+          - remove_field('y')
+          - remove_field('m')
+          - remove_field('d')
+          #sommige (uit externe bronnen overgenomen) records hebben geen 005-veld (omdat onze catalografen ze niet aanpassen
+          - unless_exists('datestamp')
+          -   add_field('datestamp','1970-01-01')
+          - end()
+          - marc_json_to_xml('marc','output')
+
+      - metadataPrefix: mods
+        schema: "http://www.loc.gov/standards/mods/mods.xsd"
+        metadataNamespace: "http://www.loc.gov/mods"
+        template: "views/export/output.tt"
+        fix:
+          - marc_json_to_xml('marc','xml','xml_declaration' => 0)
+          - xml_transform('xml','output','file' => 'public/xsl/MARC21slim2MODS3-4.xsl')
+
+      - metadataPrefix: oai_dc
+        schema: "http://www.openarchives.org/OAI/2.0/oai_dc.xsd"
+        metadataNamespace: "http://www.openarchives.org/OAI/2.0/oai_dc/"
+        template: views/export/oai_dc.tt
+        fix: 
+          - remove_field('title')
+          - remove_field('type')
+          - remove_field('publisher')
+
+          - marc_json_map('245','title.$append',-join=>' ');
+          - marc_json_map('100','creator.$append',-join=>' ');
+          - marc_json_map('110','creator.$append',-join => ' ')
+          - marc_json_map('111','creator.$append',-join=>' ');
+          - marc_json_map('700','creator.$append',-join=>' ');
+          - marc_json_map('710','creator.$append',-join => ' ')
+          - marc_json_map('711','creator.$append',-join => ' ')
+          - marc_json_map('720','creator.$append',-join => ' ')
+          - move_field('local:type','type.$append')
+          - marc_json_map('260ab','publisher.$append',-join => ' ')
+          - marc_json_map('260c','date.$append',-join => ' ')
+          #in marc_map this is '008_/36-38' because of the fake '_' field!
+          - marc_json_map('008/35-37','language.$append',-join => ' ')
+          - marc_json_map('856q','format.$append',-join => ' ')
+          - marc_json_map('5**','description.$append','-join' => ' ')
+          - marc_json_map('600','subject.$append','-join' => ' ')
+          - marc_json_map('610','subject.$append','-join' => ' ')
+          - marc_json_map('611','subject.$append','-join' => ' ')
+          - marc_json_map('630','subject.$append','-join' => ' ')
+          - marc_json_map('650','subject.$append','-join' => ' ')
+          - marc_json_map('653','subject.$append','-join' => ' ')
+          - marc_json_map('752abcd','coverage.$append','-join' => ' ')
+          - marc_json_map('530abcdu','relation.$append','-join' => ' ')
+          - marc_json_map('760ot','relation.$append','-join' => ' ')
+          - marc_json_map('762ot','relation.$append','-join' => ' ')
+          - marc_json_map('765ot','relation.$append','-join' => ' ')
+          - marc_json_map('767ot','relation.$append','-join' => ' ')
+          - marc_json_map('770ot','relation.$append','-join' => ' ')
+          - marc_json_map('775ot','relation.$append','-join' => ' ')
+          - marc_json_map('773ot','relation.$append','-join' => ' ')
+          - marc_json_map('774ot','relation.$append','-join' => ' ')
+          - marc_json_map('775ot','relation.$append','-join' => ' ')
+          - marc_json_map('776ot','relation.$append','-join' => ' ')
+          - marc_json_map('777ot','relation.$append','-join' => ' ')
+          - marc_json_map('780ot','relation.$append','-join' => ' ')
+          - marc_json_map('785ot','relation.$append','-join' => ' ')
+          - marc_json_map('786ot','relation.$append','-join' => ' ')
+          - marc_json_map('787ot','relation.$append','-join' => ' ')
+          - marc_json_map('856u','identifier.$append','-join' => ' ')          
+          - marc_json_map('020a','isbn_temp')
+          - prepend('isbn_temp','ISBN:')
+          - move_field('isbn_temp','identifier.$append')
+          - marc_json_map('022a','issn_temp')
+          - prepend('issn_temp','ISSN:')
+          - move_field('issn_temp','identifier.$append')
+
+          - move_field('_id','identifier.$append')
+          - move_field('location.*','identifier.$append')
+          - marc_json_map('506a','rights.$append','-join' => ' ')
+          - marc_json_map('540a','rights.$append','-join' => ' ')
+          
+          #oai heeft datestamp nodig!
+          - copy_field('fDATE','y')
+          - copy_field('fDATE','m')
+          - copy_field('fDATE','d')
+          - substring('y',0,4)
+          - substring('m',4,2)
+          - substring('d',6,2)
+          - copy_field('y','datestamp.$append')
+          - copy_field('m','datestamp.$append')
+          - copy_field('d','datestamp.$append')
+          - join_field('datestamp','-')
+          - remove_field('y')
+          - remove_field('m')
+          - remove_field('d')
+
+          - remove_field('marc')
+          - remove_field('parent')
+          - remove_field('source')
+          - remove_field('author')
+          - remove_field('local:id')
+          - remove_field('year')
+
+  Lexicon:
+    namespace: MeerCat::Lexicon
+    path: languages
+    auto_detect: 1
+    default: en
+    func: [l, _]
+    session_name: lang
+    param_name: lang
+    langs:
+     en: English
+     fr: Français
+     nl: Nederlands
+  Auth::RBAC:
+    credentials:
+      class: CAS
+      options:
+        store: default
+        bag: users
+        cas: *cas 
+    permissions:
+      class: Config
+      options:
+        control:
+          admin:
+            permissions:
+              manage_accounts:
+                operations:
+                  - view
+                  - create
+                  - update
+                  - delete
+          user:
+            permissions:
+              manage_accounts:
+                operations:
+                  - view
+                  - create
+          guests:
+            permissions:
+              manage_accounts:
+                operations:
+                  - view
+
+longview:
+ title_tag: "title"
+ tags: ["author","year","faculty","issn","isbn","library","location","department"]
+
+suggest_fields:
+  - field: author_shingle
+    label: author
+  - field: title_shingle
+    label: title
+suggest_fields2:
+  - field: author_edgengram
+    show_field: author_not_analyzed
+    label: author
+  - field: title_edgengram
+    show_field: title_not_analyzed
+    label: title
+
+suggester2:
+  package: "Catmandu::Suggester::ElasticSearch::Facet"
+  options:
+    build_options:
+      store: search
+      bag: parent      
+    default_parameters:
+      field: title_edgengram
+      show_field: title_not_analyzed
+      limit: 5
+
+suggester:
+  package: "Catmandu::Suggester::ElasticSearch::Plugin"
+  options:
+    build_options:
+      base_url: "http://localhost:9200/meercat/child"
+    default_parameters:
+      field: title_shingle
+      similarity: 0.5
+      type: fst
+      size: 5
+#vreemde resultaten: suggesties leveren GEEN resultaten wanneer je ze gebruikt in een query!
+spelling:
+  package: "Catmandu::Suggester::ElasticSearch"
+  options:
+    build_options:
+      base_url: "http://localhost:9200/meercat/child"
+    default_parameters:
+      field: "suggest"
+      size: 1
+      gram_size: 30
+      confidence: 1
+      direct_generator:
+        - field: "suggest"
+          suggest_mode: "popular"
+          min_doc_freq: 1
+          min_word_len: 2

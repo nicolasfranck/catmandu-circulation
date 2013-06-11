@@ -1,0 +1,134 @@
+th {
+ background-color: #fff;
+ color: #000;
+ font-weight: bold;
+ font-size: 120%;
+}
+
+.query {
+ margin-top: 20px;
+ margin-bottom: 10px;
+}
+
+.query input[type='text'] {
+ width: 400px;
+ font-size: 140%;
+}
+
+.error {
+ margin-top: 20px;
+ font-weight: bold;
+ color: #f00;
+}
+
+.view {
+ background-color: #fee;
+ width: 800px;
+}
+
+.viewdetails , .viewdetails th {
+ background-color: #eee;
+}
+
+.viewdetails th {
+ background-color: #ccc;
+}
+
+.reply {
+ background-color: #fee;
+ width: 600px;
+}
+
+.reply th{
+ width: 150px; 
+}
+
+.reply td {
+ width: 550px;
+}
+
+.reply input[type='text'] {
+ width: 500px;
+}
+
+.reply textarea {
+ width: 500px;
+}
+
+.requestshort {
+ margin-top: 10px;
+ margin-bottom: 10px;
+ font-size: 110%;
+}
+
+.requestlong {
+ width: 800px;
+ background-color: #fee;
+}
+
+.requestaction {
+ background-color: #fff;
+}
+
+.addjournal {
+ background-color: #fee;
+}
+
+.addjournal em {
+ font-size: 120%; 
+}
+
+.mandatory {
+ color: #f00;
+}
+
+table.holding {
+ border-collapse:collapse;
+ font-size: 80%;
+}
+
+.holding td , .holding th {
+ border-width: 1px;
+ border-style: solid;
+} 
+
+#templates li {
+ font-family: Consolas, Courier, "Courier New", monospace;
+ font-weight: bold;
+ color: #8d0e3a;
+ list-style: none;
+ margin-left: -15px;
+ cursor: hand;
+}
+
+h3 {
+ margin-top: 10px;
+ margin-bottom: 10px;
+}
+
+ul.news .title {
+  color: #000000;
+}
+
+ul.news a.more {
+  display: block;
+}
+
+ul.news p {
+  margin-top: 2px;
+}
+
+.blog .title {
+   font-weight: bold;
+   font-size: 120%;
+   margin-top: 20px;
+}
+
+.blog .body {
+   margin-left: 10px;
+}
+
+.blog .date {
+   color: #ccc;
+   margin-top: 5px;
+}
