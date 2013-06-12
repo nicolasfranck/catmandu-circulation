@@ -8,12 +8,16 @@
 [% END %]
 
 [% MACRO control_group BLOCK %]
-  <div class="control-group[% IF errors.grep(name.upper).size %] error[% END %]">
+  [% error = errors.grep(name).0 %]
+  <div class="control-group[% IF error %] error[% END %]">
     <label class="control-label" for="_[% name | html %]">[% l(name) %] (*)</label>
     <div class="controls">
       [% input(name='_' _ name,type=type,readonly=readonly,placeholder=l(name)) %]
-      <span class="help-inline[% IF errors.grep(name.upper).size %] error[% END %]">
-      </span>
+      [% IF error %]
+        <span class="help-inline[% IF error %] error[% END %]">
+        [% l(error) %]    
+        </span>
+      [% END %]
     </div>
   </div>
 [% END %]
@@ -43,10 +47,16 @@
   [% ELSE %]
 
     <div class="control-group">
+      [% error = errors.grep('_type').0 %]
       <label class="control-label" for="_type">[% l('type') %] (*)</label>
       <div class="controls">
         <input type="radio" name="_type" value="borrow" [% IF params.item('_type') == 'borrow' %]checked="checked"[% END %]>[% l('i-want-to-borrow-this-work') %]<br>
         <input type="radio" name="_type" value="consult" [% IF params.item('_type') == 'consult' %]checked="checked"[% END %]>[% l('i-want-to-read-this-work-in-the-library') %]
+        [% IF error %]
+          <span class="help-inline[% IF error %] error[% END %]">
+          [% l(error) %]    
+          </span>
+        [% END %]
       </div>
     </div>
 

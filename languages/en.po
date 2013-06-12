@@ -39,3 +39,9 @@ msgstr "department"
 
 msgid "did-you-mean"
 msgstr "Did you mean"
+
+msgid "_name_invalid"
+msgstr "gelieve uw naam op te geven"
+
+msgid "_contact_invalid"
+msgstr "gelieve uw GSM of Email op te geven"

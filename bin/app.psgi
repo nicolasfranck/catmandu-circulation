@@ -7,6 +7,7 @@ use Plack::Builder;
 use Circulation::App::Control::First;
 use Circulation::App::Login;
 use Circulation::App::Request;
+use Circulation::App::Items;
 
 my $base_url = Catmandu->config->{base_url};
 

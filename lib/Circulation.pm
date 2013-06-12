@@ -1,16 +1,18 @@
 package Circulation;
 use Catmandu::Sane;
 use Catmandu;
-use Catmandu::Util qw(:is :check require_package :array);
+use Catmandu::Util qw(:is :check require_package :array data_at);
 use Try::Tiny;
 
 use Exporter qw(import);
-our @stores = qw(requests emails libraries prints sessions sms templates);
+our @stores = qw(requests emails libraries prints sessions sms templates index_requests meercat);
 our @validator = qw(validator resolve_validator_errors);
-our @EXPORT_OK = (@stores,@validator);
+our @alephx = qw(alepx);
+our @EXPORT_OK = (@stores,@validator,@alephx);
 our %EXPORT_TAGS = (
   all => [@EXPORT_OK],
-  stores => \@stores
+  stores => \@stores,
+  alephx => \@alephx
 );
 
 use Data::Validator;
@@ -31,6 +33,24 @@ sub documents_store_name {
   state $documents_store_name = do {
     Catmandu->config->{documents_store_name} || "default";
   };
+}
+sub index_store_name {
+  state $index_store_name = do {
+    Catmandu->config->{index_store_name} || "index";
+  };
+
+}
+sub meercat_store_name {
+  state $meercat_store_name = do {
+    Catmandu->config->{meercat_store_name} || "meercat";
+  };
+
+}
+sub meercat {
+  state $meercat = Catmandu->store(meercat_store_name())->bag();
+}
+sub index_requests {
+  state $index_requests = Catmandu->store(index_store_name())->bag("requests");
 }
 sub requests {
   state $requests = Catmandu->store(documents_store_name())->bag("requests");
@@ -84,19 +104,36 @@ sub resolve_validator_errors {
   for my $err(@$errs){
     given($err->{type}){
       when("MissingParameter"){
-        push @errors,"DATA_".uc($err->{name})."_REQUIRED";
+        push @errors,lc($err->{name})."_required";
       }
       when("InvalidValue"){
-        push @errors,"DATA_".uc($err->{name})."_INVALID";
+        push @errors,lc($err->{name})."_invalid";
       }
       when("UnknownParameter"){
-        push @errors,"DATA_".uc($err->{name})."_INVALID";
+        push @errors,lc($err->{name})."_invalid";
       }
       when("InvalidValue"){
-        push @errors,"DATA_".uc($err->{name})."_INVALID";
+        push @errors,lc($err->{name})."_invalid";
       }
     }
   }
   \@errors;
+}
+sub alephx {
+  state $instances = {};
+  my($class,$name) = @_;
+
+  my $key = $name || "default";
+
+  $instances->{$key} ||= do {
+    my($i);
+    my $package = data_at(["alephx",$key,"package"],Catmandu->config);
+    my $options = data_at(["alephx",$key,"options"],Catmandu->config) // {};
+    check_string($package);
+    check_hash_ref($options);
+    $i = require_package($package)->new(%$options);
+    Catmandu::BadArg->throw("unknown alephx '$key'") unless $i;
+    $i;
+  };
 }
 1;

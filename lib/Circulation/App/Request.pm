@@ -4,8 +4,10 @@ use Catmandu::Sane;
 use Catmandu;
 use Dancer qw(:syntax);
 use Dancer::Plugin::Lexicon;
+use Dancer::Plugin::Stomp;
 use Circulation qw(:all);
 use Circulation::Parser::Request;
+use Circulation::Indexable::Request;
 use Catmandu::Util qw(:is :array require_package);
 use Try::Tiny;
 
@@ -27,6 +29,7 @@ prefix '/request' => sub {
   };
   post '/add' => sub {
     my $params = params();
+
     my $object = parse_request(); 
 
     my($data,%extra) = validator_request()->validate(%$params);
@@ -40,12 +43,40 @@ prefix '/request' => sub {
       forward '/request/add',$params,{ method => "GET" };
 
     }else{
+      $object->{status} = "NEW";
+      #add to database
+      $object = requests()->add($object);
+      #add to index
+      my $idx = indexable_request()->to_index_record($object);
+      index_requests()->add($idx);
+      index_requests()->commit();
+      #add to message queue for further processing
+      queue(to_json({
+        controller => 'request',
+        func => 'add',
+        id => $object->{_id} 
+      },{pretty => 0}));
+
       return to_json($object);
     }    
   };
  
 };
+sub queue {
+  my $msg = $_[0];
+  state $subscribed = 0;
+  unless($subscribed){
+    if(is_hash_ref(config->{stomp}->{subscribe}) && is_string(config->{stomp}->{subscribe}->{destination})){
+      stomp()->subscribe(config->{stomp}->{subscribe});
+    }
+    $subscribed = 1;
+  }
+  stomp_send {
+    destination => config->{stomp}->{destination},
+    body => $msg
+  };
 
+}
 sub parser_request {
   state $parser_request = do {
     my $record_resolver = require_package(config->{record_resolver}->{package})->new(
@@ -70,6 +101,9 @@ sub parse_request {
 
 sub validator_request {
   state $validator_request = validator("request");
+}
+sub indexable_request {
+  state $indexable_request = Circulation::Indexable::Request->new;
 }
 
 hook before_template_render => sub {

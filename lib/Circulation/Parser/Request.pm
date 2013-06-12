@@ -22,7 +22,10 @@ sub parse {
   my $cfg = $opts{cfg};
   my $session = $opts{session};
 
-  my $object = {};
+  my $object = {
+    created => time,
+    modified => time
+  };
 
   $object->{request}->{remote_addr} = $env->{REMOTE_ADDR};
 
@@ -110,13 +113,6 @@ sub parse {
   return $object;
 }
 
-sub to_index_record {
-  my($self,$object)=@_;
-  my $r = {};
-
-  $r;
-}
-
-with 'Circulation::Parser','Circulation::Indexable';
+with 'Circulation::Parser';
 
 1;

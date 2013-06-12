@@ -6,34 +6,32 @@
 [%END%]
 
 <div>
+  <h2>[% l('please-provide-the-following-information') %]</h2>
 
-      <h2>[% l('please-provide-the-following-information') %]</h2>
+  [% IF errors %]
+    <div class="error">[% l('some-validation-errors') %]</div>
+  [% END %]
 
-      [% IF errors %]
-        <div class="error">[% l('some-validation-errors') %]</div>
-      [% END %]
+  [% IF canrequest == 1 %]
+    [% INCLUDE request/form.tt %]
+  [% ELSE %]
+    [% INCLUDE request/no_form.tt %]
+  [% END %]    
 
-      [% IF canrequest == 1 %]
-        [% INCLUDE request/form.tt %]
-      [% ELSE %]
-        [% INCLUDE request/no_form.tt %]
-      [% END %]    
+  <h2>[% l('work-to-be-requested') %]</h2>
 
-      <h2>[% l('work-to-be-requested') %]</h2>
-
-      [% IF obj.record %]
-        [% INCLUDE request/parse_record.tt %]
-      [% ELSE %]
-        [% l('no-record-identifier-in-current-request') %]
-      [% END %]
-      <h2>[% l('id-?') %]</h2>
-      <p>
-      [% l('please-use-one-of-the-following-id-numbers') %]
-      </p>
-      <ul>
-        <li>[% l('ugent-id') %]</li>
-        <li>[% l('visitor-card-number') %]</li>
-        <li>[% l('identity card number') %]</li>
-      </ul> 
-
+  [% IF obj.record %]
+    [% INCLUDE request/parse_record.tt %]
+  [% ELSE %]
+    [% l('no-record-identifier-in-current-request') %]
+  [% END %]
+  <h2>[% l('id-?') %]</h2>
+  <p>
+  [% l('please-use-one-of-the-following-id-numbers') %]
+  </p>
+  <ul>
+    <li>[% l('ugent-id') %]</li>
+    <li>[% l('visitor-card-number') %]</li>
+    <li>[% l('identity card number') %]</li>
+  </ul> 
 </div>
