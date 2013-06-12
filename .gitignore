@@ -1,0 +1,10 @@
+config.*
+catmandu.*
+!config.default.*
+!catmandu.default.*
+_build/
+BUILD
+MYMETA.*
+.DS_Store
+Build
+data/*.db
