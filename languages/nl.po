@@ -39,3 +39,15 @@ msgstr "afdeling"
 
 msgid "did-you-mean"
 msgstr "bedoelde u"
+
+msgid "LOAN/open shelves"
+msgstr "Beschikbaar voor uitleen (open kast)"
+
+msgid "LOAN/closed stacks"
+msgstr "Beschikbaar voor uitleen (magazijn)"
+
+msgid "Not available (lost)"
+msgstr "Niet beschikbaar (verdwenen)"
+
+msgid "Consult digital copy"
+msgstr "Digitale versie"

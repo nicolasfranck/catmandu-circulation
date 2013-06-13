@@ -45,3 +45,15 @@ msgstr "gelieve uw naam op te geven"
 
 msgid "_contact_invalid"
 msgstr "gelieve uw GSM of Email op te geven"
+
+msgid "LOAN/open shelves"
+msgstr "Available for loan"
+
+msgid "LOAN/closed stacks"
+msgstr "Available for loan (store)"
+
+msgid "Not available (lost)"
+msgstr "Niet beschikbaar (verdwenen)"
+
+msgid "Consult digital copy"
+msgstr "Digital copy"

@@ -1,0 +1,40 @@
+<table>
+  <tr>
+    <td>
+      [% bor_info = record.bor_info %]
+      [% z304 = bor_info.z304 %]
+      [% z303 = bor_info.z303 %]
+      [% FOREACH key IN ["z304-address-1","z304-address-2","z304-address-3","z304-address-4"] %]
+        [% NEXT UNLESS z304.item(key).size %]
+        <p>[% z304.item(key).0 %]</p>
+      [% END %]
+      [% IF z304.item("z304-email-address") %]
+        <p>
+          <img src="[% request.uri_for('/img/mail.png') %]">
+          <a href="mailto:[% z304.item('z304-email-address').0 %]">[% z304.item("z304-email-address").0 %]</a>
+        </p>
+      [% END %]
+      [% IF z304.item("z304-telephone") %]
+        <p>
+          <img src="[% request.uri_for('/img/telephone.png') %]">
+          <a href="mailto:[% z304.item('z304-telephone').0 %]">[% z304.item("z304-telephone").0 %]</a>
+        </p>
+      [% END %]
+      [% IF z304.item("z304-telephone") %]
+        <p>
+          <img src="[% request.uri_for('/img/telephone.png') %]">
+          <a href="mailto:[% z304.item('z304-telephone').0 %]">[% z304.item("z304-telephone").0 %]</a>
+        </p>
+      [% END %]
+      [% IF z303.item("z303-field-2") %]
+        <p>
+          <img src="[% request.uri_for('/img/link.png') %]">
+          <a href="mailto:[% z303.item('z303-field-2').0 %]">[% z303.item("z303-field-2").0 %]</a>
+        </p>
+      [% END %]
+    </td>
+    <td>
+    </td>
+  </tr>
+</table>
+[% record.calendar_html %]

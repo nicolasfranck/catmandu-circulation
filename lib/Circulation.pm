@@ -7,7 +7,7 @@ use Try::Tiny;
 use Exporter qw(import);
 our @stores = qw(requests emails libraries prints sessions sms templates index_requests meercat);
 our @validator = qw(validator resolve_validator_errors);
-our @alephx = qw(alepx);
+our @alephx = qw(alephx);
 our @EXPORT_OK = (@stores,@validator,@alephx);
 our %EXPORT_TAGS = (
   all => [@EXPORT_OK],

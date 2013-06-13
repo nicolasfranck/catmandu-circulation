@@ -1,0 +1,102 @@
+[%- USE JSON.Escape -%]
+
+<!--
+  show items
+-->
+<script type="text/javascript">
+  var record = [%- record.json -%];
+</script>
+<h3>[%- record.title -%]</h3>
+<table class="table table-condensed table-striped">
+  <tr>
+  [%- FOREACH header IN ["library","department","loan_status","location","service"] -%]
+    <th>[%- l(header) -%]</th>
+  [%- END -%]
+  </tr>
+[% FOREACH item IN record.items %]
+  <tr>
+  [%- FOREACH key IN ["library","department","loan_status","location"] -%]
+    <td>
+      [%- l(item.item(key)) -%]
+    </td>
+  [%- END -%]
+    <td></td>
+  </tr>
+[% END %]
+</table>
+[% FOREACH library_item IN record.library_items %]
+<iframe src="[% request.uri_for('/libraries/' _ library_item.library) %]"></iframe>
+[% END %]
+
+
+<!--
+  load library information
+-->
+<div id="library_addresses">
+loading..
+</div>
+<script type="text/javascript">
+  var libraries_url = "[% catmandu_config.libraries.url %]";
+  var baseUrl = "[% request.uri_base %]";
+  var add_library_first_time = true;
+  function add_library(library){
+
+    var library_addresses = $("#library_addresses");
+
+    var z304 = library.bor_info.z304;  
+    var z303 = library.bor_info.z303;
+
+    var html = [];
+
+    html.push("<table><tr>");
+
+    html.push("<td>");
+
+    //address
+    var keys = ["z304-address-1","z304-address-2","z304-address-3","z304-address-4"];
+    for(var i = 0;i< keys.length;i++){
+      if(!(keys[i] in z304 && z304[keys[i]].length > 0))continue;
+      html.push("<p>");
+      html.push(z304[keys[i]][0]);
+      html.push("</p>"); 
+    }
+
+    //mail, telephone and link
+    if(z304["z304-email-address"].length > 0){
+      var email = z304["z304-email-address"][0];
+      html.push("<p>");
+      html.push("<img src=\""+baseUrl+"/img/mail.png\" >");
+      html.push("<a href=\"mailto:"+email+"\">"+email+"</a>");
+      html.push("</p>");
+    }
+    if(z304["z304-telephone"].length > 0){
+      html.push("<p>");
+      html.push("<img src=\""+baseUrl+"/img/telephone.png\" >");
+      html.push(z304["z304-telephone"][0]);
+      html.push("</p>");
+    }
+    if(z303["z303-field-2"].length > 0){
+      var href = z303["z303-field-2"][0];
+      html.push("<p>");
+      html.push("<img src=\""+baseUrl+"/img/link.png\" >");
+      html.push("<a href=\""+href+"\">"+href+"</a>");
+      html.push("</p>");
+    }
+
+    html.push("</td>");
+
+    html.push("</tr></table>");
+
+    if(add_library_first_time){
+      add_library_first_time = false;      
+      library_addresses.html("");
+    }
+      
+
+    library_addresses.append(html.join(''));
+  }
+</script>
+[% FOREACH library_item IN record.library_items %]
+<script type="text/javascript" src="[% catmandu_config.libraries.url %]/libraries/[% library_item.library %].jsonp?callback=add_library" async="true"></script>
+[% END %]
+
