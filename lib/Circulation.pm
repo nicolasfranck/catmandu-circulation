@@ -5,7 +5,7 @@ use Catmandu::Util qw(:is :check require_package :array data_at);
 use Try::Tiny;
 
 use Exporter qw(import);
-our @stores = qw(requests emails libraries prints sessions sms templates index_requests meercat);
+our @stores = qw(requests emails libraries prints sessions sms templates index_requests meercat request_reserve);
 our @validator = qw(validator resolve_validator_errors);
 our @alephx = qw(alephx);
 our @EXPORT_OK = (@stores,@validator,@alephx);
@@ -29,6 +29,11 @@ sub config {
 }
 
 #stores
+sub request_reserve_store_name {
+  state $request_reserve_store_name  = do {
+    Catmandu->config->{request_reserve_store_name} || "default";
+  };
+}
 sub documents_store_name {
   state $documents_store_name = do {
     Catmandu->config->{documents_store_name} || "default";
@@ -45,6 +50,9 @@ sub meercat_store_name {
     Catmandu->config->{meercat_store_name} || "meercat";
   };
 
+}
+sub request_reserve {
+  state $request_reserve = Catmandu->store(request_reserve_store_name())->bag("request_reserve");
 }
 sub meercat {
   state $meercat = Catmandu->store(meercat_store_name())->bag();

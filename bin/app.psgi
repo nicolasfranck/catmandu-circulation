@@ -3,6 +3,7 @@ use Catmandu::Sane;
 use Catmandu qw(:load);
 use Dancer;
 use Plack::Builder;
+use Plack::App::Proxy;
 
 use Circulation::App::Control::First;
 use Circulation::App::Login;

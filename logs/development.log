@@ -84,3 +84,10 @@ as needed at /usr/local/share/perl5/Dancer/Plugin/Lexicon.pm line 80.
   [% FOREACH key IN ["wday","date","hours" %] at /usr/local/share/perl5/Dancer/Template/Abstract.pm line 89. in /usr/local/share/perl5/Dancer/Handler.pm l. 98
 [13079] error @0.791085> [hit #1]request to GET /items crashed: core - template - file error - parse error - /home/njfranck/git/catmandu-circulation/views/items.tt line 68: unexpected end of directive
   [% FOREACH key IN ["wday_formatted","date_formatted","hours" %] at /usr/local/share/perl5/Dancer/Template/Abstract.pm line 89. in /usr/local/share/perl5/Dancer/Handler.pm l. 98
+[3157] error @0.303028> [hit #134]request to GET /items crashed: core - template - file error - parse error - /home/njfranck/git/catmandu-circulation/views/items.tt line 23: unexpected end of directive
+  [% item.location.replace(' ','_' %] at /usr/local/share/perl5/Dancer/Template/Abstract.pm line 89. in /usr/local/share/perl5/Dancer/Handler.pm l. 98
+[3877] error @0.324990> [hit #16]request to GET /items crashed: core - template - file error - parse error - /home/njfranck/git/catmandu-circulation/views/items.tt line 24: unexpected end of directive
+  [% l(item.item("loan_status") %] at /usr/local/share/perl5/Dancer/Template/Abstract.pm line 89. in /usr/local/share/perl5/Dancer/Handler.pm l. 98
+[7549] error @0.645752> [hit #1]request to GET /items crashed: hash- or arrayref expected (not a simple scalar, use allow_nonref to allow this) at /usr/local/share/perl5/Dancer/Serializer/JSON.pm line 54. in /usr/local/share/perl5/Dancer/Handler.pm l. 98
+[7589] error @0.635441> [hit #1]request to GET /items crashed: hash- or arrayref expected (not a simple scalar, use allow_nonref to allow this) at /usr/local/share/perl5/Dancer/Serializer/JSON.pm line 54. in /usr/local/share/perl5/Dancer/Handler.pm l. 98
+[7922] error @0.647240> [hit #1]request to GET /items crashed: hash- or arrayref expected (not a simple scalar, use allow_nonref to allow this) at /usr/local/share/perl5/Dancer/Serializer/JSON.pm line 54. in /usr/local/share/perl5/Dancer/Handler.pm l. 98

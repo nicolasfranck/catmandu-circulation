@@ -8,30 +8,44 @@
 <h3>[%- record.title -%]</h3>
 <table class="table table-condensed table-striped">
   <tr>
-  [%- FOREACH header IN ["library","department","loan_status","location","service"] -%]
+  [%- FOREACH header IN ["library","department","location","item_status_h","service"] -%]
     <th>[%- l(header) -%]</th>
   [%- END -%]
   </tr>
 [% FOREACH item IN record.items %]
   <tr>
-  [%- FOREACH key IN ["library","department","loan_status","location"] -%]
+  [%- FOREACH key IN ["library","department","location","item_status_h"] -%]
     <td>
       [%- l(item.item(key)) -%]
     </td>
-  [%- END -%]
-    <td></td>
+  [%- END -%]    
+    [%# some locations have spaces %]
+    <td>
+      [% loc = item.location.replace('[\.\/\s]','_') %]
+      [% IF item.action && item.action == "request" %]
+      <span id="location-[% loc %]">      
+      [%- l('checking-availability') -%]
+      </span>
+      <span id="note-[% loc %]">
+  
+      </span>
+      [% END %]
+    </td>
   </tr>
 [% END %]
 </table>
 
 <!-- show library/libraries -->
+
+<table class="table">
 [% FOREACH library IN record.libraries %]
-<table>
   <tr>
     <td>
       [% bor_info = library.bor_info %]
       [% z304 = bor_info.z304 %]
       [% z303 = bor_info.z303 %]
+      [% full_address = z304.item("z304-address-2").0 _ " " _ z304.item("z304-address-3").0 %]
+      
       [% FOREACH key IN ["z304-address-1","z304-address-2","z304-address-3","z304-address-4"] %]
         [% val = z304.item(key).0 %]
         [% NEXT UNLESS val %]
@@ -59,17 +73,68 @@
       [% END %]
     </td>
     <td>
+      <iframe width="400px" height="250px" src="http://maps.google.com?q=[% full_address %]&output=embed"></iframe>
+    </td>
+    <td>
+      <table>
+      [% FOREACH cal IN library.calendar %]
+      <tr>
+        [% FOREACH key IN ["wday_formatted","date_formatted","hours"] %]
+          <td>[% cal.item(key) %]</td>
+        [% END %]
+      </tr> 
+      [% END %]
+      </table>
     </td>
   </tr>
-</table>
-<table>
-  [% FOREACH cal IN library.calendar %]
-  <tr>
-    [% FOREACH key IN ["wday_formatted","date_formatted","hours"] %]
-      <td>[% cal.item(key) %]</td>
-    [% END %]
-  </tr> 
-  [% END %]
-</table>
 [% END %]
+</table>
+<script type="text/javascript">
+  var baseUrl = "[% request.uri_base %]";
+  var loan_status_config = {
+    "A":"[% l('loan-status-a') %]",
+    "C":"[% l('loan-status-c') %]",
+    "L":"[% l('loan-status-l') %]"
+  };
+  var lang = "[% language_tag() %]";
+  $(document).ready(function(){
+    $.ajax({
+      url: baseUrl+"/items/available?record="+record["record"],
+      success:function(data){
+        if(data.errors.length > 0)return;
 
+        for(var i = 0;i < data.items.length;i++){
+          var item = data.items[i];
+          var loan_status = item["loan-status"];
+          var loan_due_date = item["loan-due-date"];
+
+          //'BIB READING ROOM' => 'BIB'
+
+          var url = "http://search.ugent.be/app/request?func=add&amp;_record="+(record["record"] || "")+  
+          "&amp;_library="+(item["collection"] || "")+
+          "&amp;_callnr="+(item["call-no-1"] || "")+
+          "&amp;_barcode="+(item["barcode"] || "")+
+          "&amp;lang="+(lang || "");
+
+          var text_request = "<a href=\""+url+"\" class=\"btn btn-success\">[% l('request') %]</a>";
+          var text_note = "";
+          if(loan_status){
+            var year = loan_due_date.substr(0,4);
+            var month = loan_due_date.substr(4,2);
+            var day = loan_due_date.substr(6,2);
+            text_note = loan_status_config[loan_status]+" ("+day+"/"+month+"/"+year+")";
+          }
+          var l = item["call-no-1"].replace(/[\.\/\s]/g,'_');
+          var location_id = "location-"+l;
+          var note_id = "note-"+l;
+          var location_e = document.getElementById(location_id);
+          var note_e = document.getElementById(note_id);
+
+          if(location_e)location_e.innerHTML = text_request;
+          if(note_e)note_e.innerHTML = text_note;
+
+        }
+      }
+    });
+  });
+</script>

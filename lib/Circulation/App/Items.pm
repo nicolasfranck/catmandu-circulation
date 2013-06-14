@@ -63,6 +63,46 @@ prefix '/items' => sub {
     
     $r->{record} = $record;
     $r->{l} = [];
+
+    #request? Catmandu::Fix::items converteert 852c (met holdings) naar items! Je kan ze enkel onderscheiden op basis van bestaan van een barcode
+    my @req_res;
+    for my $lib(@{ $r->{libraries} }){
+      my $l = request_reserve()->get($lib);
+      push @req_res,$l if $l;
+    }
+    for my $item(@{ $r->{items} }){   
+      my $index = first_index { $_->{library} eq $item->{library} } @req_res;
+
+      #geen speciale regeling? Sorry, dan geen request knop, want bibliotheek moet akkoord gaan!
+      unless($index >=0){
+        $item->{action} = "none";
+        next;
+      }
+
+      my $rs = $req_res[$index];
+
+      #speciale regeling
+
+      #enkel holdings
+      if(!is_string($item->{barcode})){
+
+        $item->{action} = $rs->{no_items_action};
+
+      }elsif( $item->{item_process_status} =~ /$rs->{item_process_status}/ ){
+
+        $item->{action} = $rs->{item_process_action};
+
+      }elsif( $item->{item_status} =~ /$rs->{item_status}/ ){
+  
+        $item->{action} = $rs->{action};
+  
+      }else{
+
+        $item->{action} = $rs->{default_action};
+
+      }
+
+    }    
     
     #retrieve library information from alephx
     for my $lib(@{$r->{libraries} || [] }){
@@ -90,7 +130,6 @@ prefix '/items' => sub {
         $p = is_hash_ref($p) ? $p:{};
         $p->{locale} = Catmandu->config->{libraries}->{calendar}->{locale}->{ language_tag() } || Catmandu->config->{libraries}->{calendar}->{default_locale};
         $url .= "?".join '&',map { "$_=".uri_escape($p->{$_}) } keys %$p;
-        say STDERR $url;
         my $res = ua()->get($url);
         my $calendar = [];
         if($res->is_success){
@@ -105,8 +144,8 @@ prefix '/items' => sub {
     #cleanup
     delete $r->{$_} for qw(l library_items);
 
-    #return to_json($r,{ pretty => 1 });
-    template 'items',{ record => $r };
+    return to_json($r,{ pretty => 1 });
+    #template 'items',{ record => $r };
   };
 
   get '/available' => sub {
@@ -116,7 +155,7 @@ prefix '/items' => sub {
     my @items;
     my @errors;
     my $res = {
-      record => $params->{_id},
+      record => $record,
       items => \@items,
       errors => \@errors
     };
@@ -124,6 +163,7 @@ prefix '/items' => sub {
     try{
 
       my($source,$fSYS) = split(':',$record || "");
+      #opgelet: alephx gebruikt enkel 1ste 9 cijfers van doc_number. De rest wordt genegeerd.
       my $r = alephx()->item_data(base => $source,doc_number => $fSYS);  
       if($r->is_success){
         for my $item(@{ $r->items() }){
@@ -139,6 +179,42 @@ prefix '/items' => sub {
     content_type 'json';
     to_json($res,{ pretty => 1 });
   };
+
+=head1 SYNOPSIS
+
+  aanpak request knop
+
+  1.  check 'library' in item (Z30-item-status) en zoek record op in 'request_reserve'
+  2.  zijn er 'items' bekend?
+      ja: ga verder naar 3
+      nee: doe wat in 'NoItemAction' staat
+        => tijdschriften hebben geen items, maar wel holdings. Per bibliotheek wordt beslist of ze tijdschriften uitlenen.
+  3.  ProcessStatus =~ <regex> 
+
+        ProcessStatus == Z30-p
+
+        is geldig 
+
+          process status heeft voorrang op item-status, want is tijdelijk regeling (vb.deze week mag boek X niet worden uitgeleend)
+          Dit controleer je dus altijd eerst!
+
+          Kijk dan naar ProcessAction
+        
+        is niet geldig: ga naar 4
+      
+  4.  ItemStatus =~ <regex>
+    
+        item-status == Z30-f
+  
+        is geldig:
+          doe wat in Action staat
+        is niet geldig:
+          doe wat in DefaultAction staat
+        
+
+  => indien geen record in request_reserve, dan geldt de regeling van het item zelf
+
+=cut
 
 };
 

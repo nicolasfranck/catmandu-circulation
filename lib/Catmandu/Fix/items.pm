@@ -2,52 +2,67 @@ package Catmandu::Fix::items;
 use Catmandu::Sane;
 use Catmandu;
 use Moo;
-use Catmandu::Util qw(:is :check);
+use Catmandu::Util qw(:is :check data_at);
 use URI::Escape qw(uri_escape);
+
+has marc => (
+  is => 'ro',
+  isa => sub{ check_array_ref($_[0]); }
+);
+has path => (
+  is => 'ro',
+  isa => sub{ check_array_ref($_[0]); }
+);
+has path_key => (
+  is => 'ro',
+  isa => sub { check_string($_[0]); }
+);
 
 around BUILDARGS => sub {
   my ($orig,$class,%args) = @_;
-  $orig->($class,%args);
+
+  my($path,$path_key) = parse_data_path($args{path}) if is_string($args{path});
+  my($marc,$marc_key) = parse_data_path($args{marc}) if is_string($args{marc});
+  push @$marc,$marc_key if $marc_key;
+  $orig->($class,path => $path,path_key => $path_key,marc => $marc,marc_key => $marc_key);
 };
 
 sub fix {
   my($self,$data)=@_;
 
-  $data->{items} = [];
+  my $marc = data_at($self->marc,$data);
 
-  for my $field(@{ $data->{marc}->{fields} || [] }){
+  my $items = [];
+
+  for my $field(@{ $marc->{fields} || [] }){
     next unless $field->{'852'};
     my $subfields = $field->{'852'}->{subfields} || [];
-    
+
+    my $barcode = get_value($subfields,'p');
+
+    #indien veld 'p' (barcode), dan bestaat er een uitgebreidere versie in de Z30
+    next if $barcode;
+
+    #geen barcode? Dan zal er ook geen Z30 zijn. Uitleenbaarheid hangt dan af van de bibliotheek
     my $item = {
       faculty => get_value($subfields,'x'),
       department => get_value($subfields,'b'),
       library => get_value($subfields,'c'),
       location => get_value($subfields,'j'),
-      holding => get_value($subfields,'a'),
-      barcode => get_value($subfields,'p')
+      holding => get_value($subfields,'a')
     };
-    
-    #indien veld 'p' (barcode), dan bestaat er een uitgebreidere versie in de Z30
-    next if $item->{barcode};
 
-    #geen barcode? Dan zal er ook geen Z30 zijn. Bijgevolg is het niet uitleenbaar!
-    delete $item->{barcode};
-
-    #geen Z30 info over dit item? Niet ontlenen!
-    $item->{loan} = 0;
-
-    push @{ $data->{items} },$item;
+    push @$items,$item;
   } 
 
   #Z30 info
-  for my $field(@{ $data->{marc}->{fields} || [] }){
+  for my $field(@{ $marc->{fields} || [] }){
     next unless $field->{'Z30'};
     my $subfields = $field->{'Z30'}->{subfields} || [];
 
     #Z30f is numerieke code, Z30F is leesbare tekst
-    my $loan = get_value($subfields,'F');
-    my $loan_code = get_value($subfields,'f');
+    my $item_status = get_value($subfields,'F');
+    my $item_status_code = get_value($subfields,'f');
 
     my $item = {
       faculty => get_value($subfields,'x'),
@@ -56,33 +71,19 @@ sub fix {
       location => get_value($subfields,'3'),     
       volume => get_value($subfields,'h'),      
       barcode => get_value($subfields,'5'),      
-      loan_status => $loan,
-      loan_status_code => $loan_code
+      item_status => get_value($subfields,'f'),
+      item_status_h => get_value($subfields,'F'),
+      item_process_status => get_value($subfields,'p')
     };
     
-    push @{ $data->{items} },$item;
+    push @$items,$item;
   }
+
+  use Data::Dumper;
+  print STDERR Dumper($items);
+
+  set_data(data_at($self->path,$data),$self->path_key,$items);
     
-  #maak algemene info op bibliotheek
-  my $facet_libraries = {};  
-  my @list;
-
-  for my $item(@{ $data->{items} }){
-    my $library_id = $item->{library};
-    $facet_libraries->{$library_id}++;
-  }
-
-  for my $library_id(keys %$facet_libraries){
-    push @list,{
-      num => $facet_libraries->{$library_id},
-      library => $library_id
-    };
-  }
-
-  @list = sort { (- ( $a->{num} <=> $b->{num} )) || $a->{library} cmp $b->{library} } @list;
-
-  $data->{library_items} = \@list;
-
   $data;
 }
 sub get_value {
@@ -107,6 +108,9 @@ sub get_value {
 
   Z30f => ontleen-status, i.e. kan het ontleend worden, en zo ja onder welke condities? Code
      F => vertaling van Z30f
+
+
+  items('marc' => 'marc','path' => 'it')
 
 
   Uitzonderingen: sommige tijdschriften (ser01) hebben holdings én items

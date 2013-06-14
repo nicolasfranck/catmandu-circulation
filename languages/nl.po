@@ -46,8 +46,35 @@ msgstr "Beschikbaar voor uitleen (open kast)"
 msgid "LOAN/closed stacks"
 msgstr "Beschikbaar voor uitleen (magazijn)"
 
+msgid "Available for loan"
+msgstr "Beschikbaar voor uitleen"
+
 msgid "Not available (lost)"
 msgstr "Niet beschikbaar (verdwenen)"
 
 msgid "Consult digital copy"
 msgstr "Digitale versie"
+
+msgid "loan-status-a"
+msgstr "uitgeleend"
+
+msgid "loan-status-c"
+msgstr "terug in bibliotheek"
+
+msgid "loan-status-l"
+msgstr "verdwenen"
+
+msgid "request"
+msgstr "aanvragen"
+
+msgid "item_status"
+msgstr "item status"
+
+msgid "service"
+msgstr "dienst"
+
+msgid "item_status_h"
+msgstr "beschikbaarheid"
+
+msgid "request-not-possible"
+msgstr "aanvragen niet mogelijk"

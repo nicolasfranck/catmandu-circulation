@@ -52,8 +52,35 @@ msgstr "Available for loan"
 msgid "LOAN/closed stacks"
 msgstr "Available for loan (store)"
 
+msgid "Available for loan"
+msgstr "Available for loan"
+
 msgid "Not available (lost)"
 msgstr "Niet beschikbaar (verdwenen)"
 
 msgid "Consult digital copy"
 msgstr "Digital copy"
+
+msgid "loan-status-a"
+msgstr "loaned"
+
+msgid "loan-status-c"
+msgstr "claimed returned"
+
+msgid "loan-status-l"
+msgstr "lost"
+
+msgid "request"
+msgstr "request"
+
+msgid "item_status"
+msgstr "item status"
+
+msgid "service"
+msgstr "service"
+
+msgid "item_status_h"
+msgstr "availability"
+
+msgid "request-not-possible"
+msgstr "request not possible"
