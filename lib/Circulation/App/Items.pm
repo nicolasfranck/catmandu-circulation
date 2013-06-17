@@ -36,6 +36,8 @@ prefix '/items' => sub {
       open my $fh,"<:utf8",\$xml or die($!);
       $r = Catmandu::Importer::MARC->new(type => "XML",file => $fh,fix => 'items')->first;
       close $fh;
+    }catch{
+      print STDERR $_;
     };
 
     #no such record
@@ -144,8 +146,8 @@ prefix '/items' => sub {
     #cleanup
     delete $r->{$_} for qw(l library_items);
 
-    return to_json($r,{ pretty => 1 });
-    #template 'items',{ record => $r };
+    #return to_json($r,{ pretty => 1 });
+    template 'items',{ record => $r };
   };
 
   get '/available' => sub {

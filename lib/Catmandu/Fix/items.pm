@@ -2,7 +2,7 @@ package Catmandu::Fix::items;
 use Catmandu::Sane;
 use Catmandu;
 use Moo;
-use Catmandu::Util qw(:is :check data_at);
+use Catmandu::Util qw(:is :check :data);
 use URI::Escape qw(uri_escape);
 
 has marc => (
@@ -24,7 +24,7 @@ around BUILDARGS => sub {
   my($path,$path_key) = parse_data_path($args{path}) if is_string($args{path});
   my($marc,$marc_key) = parse_data_path($args{marc}) if is_string($args{marc});
   push @$marc,$marc_key if $marc_key;
-  $orig->($class,path => $path,path_key => $path_key,marc => $marc,marc_key => $marc_key);
+  $orig->($class,path => $path,path_key => $path_key,marc => $marc);
 };
 
 sub fix {
@@ -33,9 +33,18 @@ sub fix {
   my $marc = data_at($self->marc,$data);
 
   my $items = [];
+  my $year;
 
   for my $field(@{ $marc->{fields} || [] }){
-    next unless $field->{'852'};
+    next unless ($field->{'852'} || $field->{'008'});
+    
+    #fallback publicatiedatum, indien geen datum per item
+    if(is_string($field->{'008'})){
+      $year = substr($field->{'008'},7,4);
+      $year = undef unless is_integer($year);
+      next;
+    }
+
     my $subfields = $field->{'852'}->{subfields} || [];
 
     my $barcode = get_value($subfields,'p');
@@ -69,18 +78,28 @@ sub fix {
       department => get_value($subfields,'1'),
       library => get_value($subfields,'2'),
       location => get_value($subfields,'3'),     
-      volume => get_value($subfields,'h'),      
       barcode => get_value($subfields,'5'),      
       item_status => get_value($subfields,'f'),
       item_status_h => get_value($subfields,'F'),
-      item_process_status => get_value($subfields,'p')
+      item_process_status => get_value($subfields,'p'),
+      material => get_value($subfields,'m')
     };
+    #publication_date? Is afhankelijk van type bron!
+    #Z30-MATERIAL (export Z30m) == 'ISSUE', dan staat publicatiedatum in Z30-ISSUE-DATE (export Z30i)
+    if(is_string($item->{material})){
+      if(lc($item->{material}) eq "issue"){ 
+        my $pd = get_value($subfields,'i');
+        if(is_string($pd) && is_integer($pd) && length($pd) == 8){
+          $pd = substr($pd,0,4)."-".substr($pd,4,2)."-".substr($pd,6,2);
+          $item->{publication_date} = $pd;
+        }
+      }elsif(defined $year){
+        $item->{publication_date} = "$year-01-01";
+      }
+    }
     
     push @$items,$item;
   }
-
-  use Data::Dumper;
-  print STDERR Dumper($items);
 
   set_data(data_at($self->path,$data),$self->path_key,$items);
     
@@ -108,6 +127,9 @@ sub get_value {
 
   Z30f => ontleen-status, i.e. kan het ontleend worden, en zo ja onder welke condities? Code
      F => vertaling van Z30f
+
+  Z30m => materiaal. Indien 'ISSUE', dan staat publicatiedatum in Z30i (Z30-ISSUE-DATE),
+          in het andere geval wordt het 008-veld gebruikt
 
 
   items('marc' => 'marc','path' => 'it')

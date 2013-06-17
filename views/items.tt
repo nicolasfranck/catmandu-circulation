@@ -45,6 +45,7 @@
       [% z304 = bor_info.z304 %]
       [% z303 = bor_info.z303 %]
       [% full_address = z304.item("z304-address-2").0 _ " " _ z304.item("z304-address-3").0 %]
+      [% full_address = full_address.replace('\(.*?\)','') %]
       
       [% FOREACH key IN ["z304-address-1","z304-address-2","z304-address-3","z304-address-4"] %]
         [% val = z304.item(key).0 %]
@@ -72,7 +73,7 @@
         </p>
       [% END %]
     </td>
-    <td>
+    <td>      
       <iframe width="400px" height="250px" src="http://maps.google.com?q=[% full_address %]&output=embed"></iframe>
     </td>
     <td>
