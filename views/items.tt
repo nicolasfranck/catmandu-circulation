@@ -36,7 +36,6 @@
 </table>
 
 <!-- show library/libraries -->
-
 <table class="table">
 [% FOREACH library IN record.libraries %]
   <tr>
@@ -44,22 +43,22 @@
       [% bor_info = library.bor_info %]
       [% z304 = bor_info.z304 %]
       [% z303 = bor_info.z303 %]
-      [% full_address = z304.item("z304-address-2").0 _ " " _ z304.item("z304-address-3").0 %]
+      [% full_address = z304.item("z304-address-2") _ " " _ z304.item("z304-address-3") %]
       [% full_address = full_address.replace('\(.*?\)','') %]
       
       [% FOREACH key IN ["z304-address-1","z304-address-2","z304-address-3","z304-address-4"] %]
-        [% val = z304.item(key).0 %]
+        [% val = z304.item(key) %]
         [% NEXT UNLESS val %]
         <p>[% val %]</p>
       [% END %]
       [% IF z304.item("z304-email-address") %]
         <p>
           <img src="[% request.uri_for('/img/mail.png') %]">
-          <a href="mailto:[% z304.item('z304-email-address').0 %]">[% z304.item("z304-email-address").0 %]</a>
+          <a href="mailto:[% z304.item('z304-email-address') %]">[% z304.item("z304-email-address") %]</a>
         </p>
       [% END %]
       [% FOREACH key IN ["z304-telephone","z304-telephone-2","z304-telephone-3","z304-telephone-4"] %]
-        [% val = z304.item(key).0 %]
+        [% val = z304.item(key) %]
         [% NEXT UNLESS val %]
         <p>
           <img src="[% request.uri_for('/img/telephone.png') %]">
@@ -69,12 +68,12 @@
       [% IF z303.item("z303-field-2") %]
         <p>
           <img src="[% request.uri_for('/img/link.png') %]">
-          <a href="mailto:[% z303.item('z303-field-2').0 %]">[% z303.item("z303-field-2").0 %]</a>
+          <a href="mailto:[% z303.item('z303-field-2') %]">[% z303.item("z303-field-2") %]</a>
         </p>
       [% END %]
     </td>
     <td>      
-      <iframe width="400px" height="250px" src="http://maps.google.com?q=[% full_address %]&output=embed"></iframe>
+      <iframe width="400px" height="250px" src="http://maps.google.com?q=[% full_address %]&amp;output=embed"></iframe>
     </td>
     <td>
       <table>
@@ -109,8 +108,6 @@
           var loan_status = item["loan-status"];
           var loan_due_date = item["loan-due-date"];
 
-          //'BIB READING ROOM' => 'BIB'
-
           var url = "http://search.ugent.be/app/request?func=add&amp;_record="+(record["record"] || "")+  
           "&amp;_library="+(item["collection"] || "")+
           "&amp;_callnr="+(item["call-no-1"] || "")+
@@ -118,7 +115,7 @@
           "&amp;lang="+(lang || "");
 
           var text_request = "<a href=\""+url+"\" class=\"btn btn-success\">[% l('request') %]</a>";
-          var text_note = "";
+          var text_note = "-";
           if(loan_status){
             var year = loan_due_date.substr(0,4);
             var month = loan_due_date.substr(4,2);

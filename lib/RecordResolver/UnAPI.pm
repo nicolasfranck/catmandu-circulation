@@ -1,12 +1,16 @@
 package RecordResolver::UnAPI;
-
-use base qw(RecordResolver);
+use Catmandu::Sane;
+use Catmandu::Util qw(:check);
+use Moo;
 
 use LWP::Simple;
 use URI::Escape;
 use XML::XPath;
 use Data::Dumper;
 use File::Slurp;
+
+has baseurl => ( is => 'ro', required => 1,isa => sub{ check_string($_[0]); } );
+has docdel_libraries => (is => 'ro',required => 1,isa => sub { check_array_ref($_[0]); });
 
 our $DEBUG = 0;
 
@@ -31,10 +35,10 @@ sub resolve_card {
     my $self = shift;
     my $id   = shift;   
 
-    die "need a baseurl" unless $self->{baseurl};
+    die "need a baseurl" unless $self->baseurl;
     
     my $url = sprintf "%s?id=%s&format=%s" 
-                            , $self->{baseurl}
+                            , $self->baseurl
                             , uri_escape($id)
                             , 'marcxml';
 
@@ -70,10 +74,10 @@ sub resolve_default {
     my $self = shift;
     my $id   = shift;   
 
-    die "need a baseurl" unless $self->{baseurl};
+    die "need a baseurl" unless $self->baseurl;
     
     my $url = sprintf "%s?id=%s&format=%s" 
-                            , $self->{baseurl}
+                            , $self->baseurl
                             , uri_escape($id)
                             , 'marcxml';
 
@@ -110,7 +114,7 @@ sub resolve_default {
             shelf   => $shelf , 
             holding => $holding ,
             barcode => $barcode
-            }) if (grep(/^$bib$/,@{$self->{docdel_libraries}}));
+            }) if (grep(/^$bib$/,@{$self->docdel_libraries}));
      }
     }
     else {
@@ -127,7 +131,7 @@ sub resolve_default {
                shelf   => $shelf , 
                holding => $holding ,
                barcode => $barcode
-               }) if (grep(/^$bib$/,@{$self->{docdel_libraries}}));
+               }) if (grep(/^$bib$/,@{$self->docdel_libraries}));
       }
     }       
 
@@ -137,5 +141,8 @@ sub resolve_default {
 	
     return $obj;
 }
+
+
+with 'RecordResolver';
 
 1;

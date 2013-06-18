@@ -1,16 +1,6 @@
 package RecordResolver;
+use Moo::Role;
 
-sub new {
-    my $pkg = shift;
-    my (%opt) = @_;
-    return bless { %opt } , $pkg;
-}
-
-#overwrite 
-# return a perl hash with your content
-sub resolve {
-    my $self = shift;
-    my $id   = shift;
-}
+requires 'resolve';
 
 1;

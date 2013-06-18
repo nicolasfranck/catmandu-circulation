@@ -5,7 +5,7 @@ use Catmandu::Util qw(:is :check require_package :array data_at);
 use Try::Tiny;
 
 use Exporter qw(import);
-our @stores = qw(requests emails libraries prints sessions sms templates index_requests meercat request_reserve);
+our @stores = qw(requests emails libraries prints sessions sms templates index_requests meercat request_reserve records documents record_resolver availability_resolver);
 our @validator = qw(validator resolve_validator_errors);
 our @alephx = qw(alephx);
 our @EXPORT_OK = (@stores,@validator,@alephx);
@@ -29,14 +29,9 @@ sub config {
 }
 
 #stores
-sub request_reserve_store_name {
-  state $request_reserve_store_name  = do {
-    Catmandu->config->{request_reserve_store_name} || "default";
-  };
-}
-sub documents_store_name {
-  state $documents_store_name = do {
-    Catmandu->config->{documents_store_name} || "default";
+sub store_name {
+  state $store_name = do {
+    Catmandu->config->{store_name} || "default";
   };
 }
 sub index_store_name {
@@ -49,10 +44,17 @@ sub meercat_store_name {
   state $meercat_store_name = do {
     Catmandu->config->{meercat_store_name} || "meercat";
   };
-
 }
+sub documents_store_name {
+  state $documents_store_name = do {
+    Catmandu->config->{documents_store_name} || "documents";
+  };
+}
+sub documents {
+  state $documents = Catmandu->store(documents_store_name())->bag;
+} 
 sub request_reserve {
-  state $request_reserve = Catmandu->store(request_reserve_store_name())->bag("request_reserve");
+  state $request_reserve = Catmandu->store(store_name())->bag("request_reserve");
 }
 sub meercat {
   state $meercat = Catmandu->store(meercat_store_name())->bag();
@@ -61,25 +63,28 @@ sub index_requests {
   state $index_requests = Catmandu->store(index_store_name())->bag("requests");
 }
 sub requests {
-  state $requests = Catmandu->store(documents_store_name())->bag("requests");
+  state $requests = Catmandu->store(store_name())->bag("requests");
 }
 sub emails {
-  state $emails = Catmandu->store(documents_store_name())->bag("emails");
+  state $emails = Catmandu->store(store_name())->bag("emails");
 }
 sub libraries {
-  state $libraries = Catmandu->store(documents_store_name())->bag("libraries");
+  state $libraries = Catmandu->store(store_name())->bag("libraries");
 }
 sub prints {
-  state $prints = Catmandu->store(documents_store_name())->bag("prints");
+  state $prints = Catmandu->store(store_name())->bag("prints");
 }
 sub sessions {
-  state $sessions = Catmandu->store(documents_store_name())->bag("sessions");
+  state $sessions = Catmandu->store(store_name())->bag("sessions");
 }
 sub sms {
-  state $sms = Catmandu->store(documents_store_name())->bag("sms");
+  state $sms = Catmandu->store(store_name())->bag("sms");
 }
 sub templates {
-  state $templates = Catmandu->store(documents_store_name())->bag("templates");
+  state $templates = Catmandu->store(store_name())->bag("templates");
+}
+sub records {
+  state $records = Catmandu->store(store_name())->bag("records");
 }
 sub validator {
   state $instances = {};
@@ -144,4 +149,16 @@ sub alephx {
     $i;
   };
 }
+
+sub record_resolver {
+  state $record_resolver = require_package(config->{record_resolver}->{package})->new(
+    %{ config->{record_resolver}->{options} }
+  );
+}
+sub availability_resolver {
+  state $a = require_package(config->{availability_resolver}->{package})->new(
+    %{ config->{availability_resolver}->{options} }
+  );
+}
+
 1;
