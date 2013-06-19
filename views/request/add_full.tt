@@ -1,5 +1,5 @@
 [%- SET embed = 1 %]
-[% IF (obj.request.record.match('^rug0(2|3)') ) || (obj.record.location && obj.record.location.size >= 1) %]
+[% IF obj.request.action == "request" %]
  [% canrequest = 1 %]
 [%ELSE%]
  [% canrequest = 0 %]
@@ -8,7 +8,7 @@
 <div>
   <h2>[% l('please-provide-the-following-information') %]</h2>
 
-  [% IF errors %]
+  [% IF errors && errors.size %]
     <div class="error">[% l('some-validation-errors') %]</div>
   [% END %]
 

@@ -11,7 +11,7 @@ sub fix {
 
   #request? Catmandu::Fix::items converteert 852c (met holdings) naar items! Je kan ze enkel onderscheiden op basis van bestaan van een barcode
   my @req_res;
-  for my $lib(@{ $data->{libraries} }){
+  for my $lib(@{ $data->{library} }){
     my $l = request_reserve()->get($lib);
     push @req_res,$l if $l;
   }

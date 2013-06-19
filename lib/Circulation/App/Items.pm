@@ -10,7 +10,7 @@ use List::MoreUtils qw(first_index);
 use Try::Tiny;
 use Catmandu::Importer::MARC;
 use Time::HiRes;
-use LWP::UserAgent;
+use Clone qw(clone);
 use URI::Escape qw(uri_escape);
 
 prefix '/items' => sub {
@@ -20,6 +20,7 @@ prefix '/items' => sub {
 
     my $record = $params->{record} || "";
     my $library = $params->{library} || "";  
+    my $faculty = $params->{faculty} || "";
 
     #aleph record
     unless(is_string($record)){
@@ -27,62 +28,64 @@ prefix '/items' => sub {
       return;  
     }  
 
-    my $r = records()->get($record);
+    my $r = meercat()->get($record);
 
     #no such record
-    unless(is_hash_ref($r)){
+    unless(defined($r)){
       status 'not_found';
       return;
     }
 
+    $r = Catmandu->fixer('items')->fix($r);
+
     #when filtering on 'library', then check if record is in this library
     if($library){
-      my $index_library = first_index { $_ eq $library} @{ $r->{libraries} || [] };
+      my $index_library = first_index { $_ eq $library} @{ $r->{library} || [] };
       unless($index_library >= 0){
         status 'not_found';
         return;
       }
-      #filter 'libraries'
-      $r->{libraries} = [$library];
-      #filter items
+      #filter items op 'library'
         $r->{items} = [
           grep {
             $_->{library} eq $library;
         }@{ $r->{items} }
       ];
     }
-    
-    $r->{record} = $record;
 
-    my @libraries;
-    #haal bibliotheekgegevens en openingsuren op
-    for my $lib(@{$r->{libraries} || [] }){
-      my $l;
-
-      my $url = sprintf(Catmandu->config->{library}->{url},$lib);
-      my $p = Catmandu->config->{library}->{params};
-      $p = is_hash_ref($p) ? $p:{};
-      $p->{locale} = Catmandu->config->{library}->{locale}->{ language_tag() } || Catmandu->config->{library}->{default_locale};
-      $url .= "?".join '&',map { "$_=".uri_escape($p->{$_}) } keys %$p;
-      my $res = ua()->get($url);
-      
-      if($res->is_success){
-        $l = from_json($res->content);
+    #when filtering on 'faculty', then check if record is in this faculty
+    if($faculty){
+      my $index_faculty = first_index { $_ eq $faculty } @{ $r->{faculty} || [] };
+      unless($index_faculty >= 0){
+        status 'not_found';
+        return;
       }
-
-      push @libraries,$l if $l;
-
+      #filter items op 'faculty'
+        $r->{items} = [
+          grep {
+            $_->{faculty} eq $faculty;
+        }@{ $r->{items} }
+      ];
     }
 
-    $r->{libraries} = \@libraries;
+    $r->{record} = $record;
 
+    #my @libraries;
+    #haal bibliotheekgegevens en openingsuren op
+    my $o = clone(openingsuren_options());     
+    $o->{locale} = config->{locale}->{ language_tag() } || config->{library}->{default_locale};
+    $o->{library} = { map { $_->{library} => 1; } @{ $r->{items} || [] }  };
+    $o->{library} = [keys %{ $o->{library} }];
+    say STDERR to_dumper($o);
+    $r->{libraries} = openingsuren()->libraries($o);
+
+    #return to_json($r,{ pretty => 1 });
     template 'items',{ record => $r };
   };
 
   get '/available' => sub {
-    my $res = availability_resolver()->resolve(params()->{record});
     content_type 'json';
-    to_json($res);
+    to_json(availability_resolver()->resolve(params->{record}));
   };
 
 =head1 SYNOPSIS
@@ -125,8 +128,11 @@ prefix '/items' => sub {
 
 };
 
-sub ua {
-  state $ua = LWP::UserAgent->new(cookie_jar => {});
+sub openingsuren {
+  state $o = require_package(config->{openingsuren}->{package})->new(config->{openingsuren}->{options});
+}
+sub openingsuren_options {
+  state $o = config->{openingsuren}->{options};
 }
 
 1;

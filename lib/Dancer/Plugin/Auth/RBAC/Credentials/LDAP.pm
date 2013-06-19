@@ -35,13 +35,12 @@ sub authorize {
   return if(!is_hash_ref($account));
 
   my $session_data = {
-    id    => $account->{ $opts->{id_attr} },
-    name  => $account->{ $opts->{name_attr} },
-    login => $account->{ $opts->{login_attr} },
-    roles => [ $account->{ $opts->{roles_attr} } ],
+    id    => $account->{ $opts->{id_attr} }->[0],
+    name  => $account->{ $opts->{name_attr} }->[0],
+    login => $account->{ $opts->{login_attr} }->[0],
+    roles => $account->{ $opts->{roles_attr} },
     error => []
   };
-
 
   return $self->credentials($session_data);
 

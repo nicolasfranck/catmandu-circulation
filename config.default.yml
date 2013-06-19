@@ -6,6 +6,20 @@ session_expires: "1 hour"
 charset: "UTF-8"
 template: template_toolkit
 
+default_locale: nl
+locale:
+  nl: nl_NL
+  en: en_EN
+
+openingsuren:
+  package: "Catmandu::OpeningsUren"
+  options:
+    base_url: "http://localhost:5002"
+    include_calendar: true
+    limit: 10
+    week_day_format: "%A"
+    date_format: "%d-%m-%Y"
+
 #layout: main
 engines:
  template_toolkit:
@@ -19,67 +33,21 @@ engines:
   ANYCASE: "no"
   WRAPPER: layouts/main.tt
 
-record_resolver: &recordresolver
-  package: "RecordResolver::UnAPI"
-  options:
-    baseurl: "http://search.ugent.be/meercat/x/unapi"
-    docdel_libraries:
-      - BIB
-      - BIBA
-      - BIBB
-      - BIBC 
-      - BIBD
-      - BIBE 
-      - BIBF
-      - BIBE
-      - BIBG
-      - BIBH 
-      - BIBI
-      - BIBJ
-      - BIBK
-      - BIBL 
-      - BIBM 
-      - BIBN
-      - K.KLDR
-      - BLID
-      - BHSL 
-      - BRKZ
-      - DEPA
-      - DEPB 
-      - DEPC
-      - ALLW 
-      - EBIB 
-      - L32 
-      - TBBS 
-      - WLIW 
-      - G00
-      - L12 
-      - L14H 
-      - L14X 
-      - L16 
-      - L26 
-      - L30 
-      - L32 
-      - L34 
-      - L37 
-      - L45 
-      - L46 
-      - L88
-      - WLBW 
-      - WE11A 
-      - WE11B 
-      - WEBIB 
-      - DIBIB 
-      - VLGMS 
-      - VBS
-availability_resolver: &availabilityresolver
-  package: "RecordResolver::Availability"
-  options:
-    baseurl: "http://aleph.ugent.be/cgi-bin/loan/check_status.cgi"
-  
 private_routes:
   - "/request"
+stomp:
+  destination: "/topic/circulation_catmandu"
+  subscribe:
+    destination: "/topic/circulation_catmandu"
+    ack: "client"
+    'activemq.prefetchSize': 1
 plugins:  
+  Stomp:
+    default:
+      host: "localhost"
+      port: "61613"
+      login: "system"
+      passwd: ""
   Lexicon:    
     namespace: "Circulation::Lexicon"
     path: languages
@@ -108,7 +76,7 @@ plugins:
           timeout: 3
           port: 636
         applications_base: "ugentID=870910100341,ou=applications,dc=ugent,dc=be"
-        applications_password: "{b1bb1b}"
+        applications_password: ""
         auth_base: "ugentID=%s,ou=people,dc=UGent,dc=be"
         auth_attr: ugentid
         search_filter: "(uid=%s)"

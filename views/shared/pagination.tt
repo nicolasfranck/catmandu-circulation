@@ -1,0 +1,44 @@
+[% IF hits.last_page == 1 %]
+
+    [% content %]
+
+[% ELSE %]
+    [% MACRO page_href(start,limit,sort) BLOCK %]
+        [% uri_for_search(page_path, start=start, limit=limit, sort=sort) %]
+    [% END %]
+
+    [% BLOCK pages %]
+        <div class="pagination pagination-large pagination-centered">
+            <ul>
+
+            [% IF hits.previous_page %]
+                <li><a href="[% page_href(hits.start-hits.limit < 0 ? 0 : hits.start-hits.limit, hits.limit,params.item("sort")) %]">«</a></li>
+            [% ELSE %]
+                <li class="disabled"><a href="#">«</a></li>
+            [% END %]
+
+            [% FOREACH page IN hits.pages_in_spread %]
+                [% IF page == hits.page %]
+                    <li class="active"><a href="[% page_href(hits.limit * (page - 1), hits.limit,params.item("sort")) %]">[% page %]</a></li>
+                [% ELSIF page.defined %]
+                    <li><a href="[% page_href(hits.limit * (page - 1), hits.limit,params.item("sort")) %]">[% page %]</a></li>
+                [% END %]
+            [% END %]
+
+            [% IF hits.next_page %]
+                <li><a href="[% page_href(hits.start+hits.limit, hits.limit,params.item("sort")) %]">»</a></li>
+            [% ELSE %]
+                <li class="disabled"><a href="#">»</a></li>
+            [% END %]
+
+            </ul>
+        </div>
+    [% END %]
+
+    [% content %]
+
+    <section style="margin-bottom: 150px">
+        [% INCLUDE pages %]
+    </section>
+
+[% END %]

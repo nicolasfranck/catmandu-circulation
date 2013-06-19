@@ -23,12 +23,16 @@
     <td>
       [% loc = item.location.replace('[\.\/\s]','_') %]
       [% IF item.action && item.action == "request" %]
-      <span id="location-[% loc %]">      
-      [%- l('checking-availability') -%]
-      </span>
-      <span id="note-[% loc %]">
+        <span id="location-[% loc %]">      
+        [%- l('checking-availability') -%]
+        </span>
+        <span id="note-[% loc %]">
   
-      </span>
+        </span>
+      [% ELSE %]  
+        <span style="color:red">
+        [% l('request-not-possible') %]
+        </span>
       [% END %]
     </td>
   </tr>
@@ -108,14 +112,14 @@
           var loan_status = item["loan-status"];
           var loan_due_date = item["loan-due-date"];
 
-          var url = "http://search.ugent.be/app/request?func=add&amp;_record="+(record["record"] || "")+  
+          var url = baseUrl+"/request/add?_record="+(record["record"] || "")+  
           "&amp;_library="+(item["collection"] || "")+
           "&amp;_callnr="+(item["call-no-1"] || "")+
           "&amp;_barcode="+(item["barcode"] || "")+
           "&amp;lang="+(lang || "");
 
           var text_request = "<a href=\""+url+"\" class=\"btn btn-success\">[% l('request') %]</a>";
-          var text_note = "-";
+          var text_note = "";
           if(loan_status){
             var year = loan_due_date.substr(0,4);
             var month = loan_due_date.substr(4,2);

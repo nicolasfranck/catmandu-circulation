@@ -9,6 +9,8 @@ use Circulation::App::Control::First;
 use Circulation::App::Login;
 use Circulation::App::Request;
 use Circulation::App::Items;
+use Circulation::App::Control::Last;
+
 
 my $base_url = Catmandu->config->{base_url};
 
@@ -19,7 +21,7 @@ my $app = sub {
 builder {
   mount "/" => builder {
     enable '+Dancer::Middleware::Rebase', base => $base_url, strip => 1 if $base_url;
-    enable 'Debug' if $ENV{PLACK_DEBUG};
+    enable 'Debug',panels => [qw(Timer Memory)] if $ENV{PLACK_DEBUG};
     $app;
   };
 };

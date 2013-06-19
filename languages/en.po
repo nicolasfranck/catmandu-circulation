@@ -41,10 +41,16 @@ msgid "did-you-mean"
 msgstr "Did you mean"
 
 msgid "_name_invalid"
-msgstr "gelieve uw naam op te geven"
+msgstr "please provide your name"
 
 msgid "_contact_invalid"
-msgstr "gelieve uw GSM of Email op te geven"
+msgstr "please provide your email of GSM"
+
+msgid "_note_invalid"
+msgstr "please provide a note"
+
+msgid "_uid_invalid"
+msgstr "please provide a valid id"
 
 msgid "LOAN/open shelves"
 msgstr "Available for loan"
@@ -84,3 +90,12 @@ msgstr "availability"
 
 msgid "request-not-possible"
 msgstr "request not possible"
+
+msgid "some-validation-errors"
+msgstr "Your request contains the following errors"
+
+msgid "please-provide-the-following-information"
+msgstr "Please provide the following information"
+
+msgid "work-to-be-requested"
+msgstr "Work to be requested"

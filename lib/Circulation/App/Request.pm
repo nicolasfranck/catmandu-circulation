@@ -9,12 +9,45 @@ use Circulation qw(:all);
 use Circulation::Indexable::Request;
 use Catmandu::Util qw(:is :array require_package);
 use Try::Tiny;
+use POSIX qw(strftime);
 
 #list records, and filter them by query
 prefix '/request' => sub {
 
+  #this route must be protected!
   get '/' => sub {
     my $params = params();
+
+    my $query = $params->{q};
+    $query = is_string($query) ? $query:"*:*";
+    my $start = $params->{start};
+    $start = is_natural($start) ? $start:0;
+    my $limit = $params->{limit};
+    $limit = is_natural($limit) ? $limit:100;
+
+    my $user = session('user');
+    my $fq;
+    if($user && config->{authen_filter}->{$user->{login}}) {
+      $fq = config->{authen_filter}->{$user->{login}};
+    }else{
+      $fq = "NOT *:*";
+    }
+
+    my %search = ( query => $query,start => $start,limit => $limit => sort => 'date_dt desc', fq => $fq);    
+
+    $params->{$_} = $search{$_} for(keys %search);
+
+    my $result = index_requests()->search(%search,reify => requests());
+
+    #TODO: aantal print jobs voor elk record
+    for my $hit(@{ $result->hits }){
+      $hit->{'print'}->{count} = 0;
+    }
+
+    my $today = strftime "%Y-%m-%dT%H:%M:%S.999Z" , gmtime(time);
+    my $yesterday = strftime "%Y-%m-%dT%H:%M:%S.999Z" , gmtime(time - 3600*24*2);
+
+    template 'request/list.tt', { today => $today,yesterday => $yesterday,result => $result};
   };
   get '/add' => sub {
     my $params = params();
@@ -22,7 +55,7 @@ prefix '/request' => sub {
     my $errors = var('errors') || [];
     my $object = var('object') || parse_request();
  
-    return to_json($object);   
+    #return to_json($object);   
     template 'request/add',{
       obj => $object,errors => $errors
     };
@@ -135,11 +168,13 @@ sub parse_request {
       $callnumber ||= '---';
       my $holding    = $items->[0]->{holding};
       my $barcode    = $items->[0]->{barcode};
+      my $action = $items->[0]->{action};
 
       $object->{request}->{library} = $library;
       $object->{request}->{callnr}  = $callnumber;
       $object->{request}->{holding} = $holding;
       $object->{request}->{barcode} = $barcode;
+      $object->{request}->{action} = $action;
 
       $params->{_library} = $library;
       $params->{_callnr} = $callnumber;
@@ -152,17 +187,21 @@ sub parse_request {
         my $callnumber = $l->{location};
         my $holding    = $l->{holding};
         my $barcode    = $l->{barcode};
+        my $action = $l->{action};
 
         if($object->{request}->{library} eq $library && $object->{request}->{callnr} eq $callnumber){
           $object->{request}->{library} = $library;
           $object->{request}->{callnr}  = $callnumber;
           $object->{request}->{holding} = $holding;
           $object->{request}->{barcode} = $barcode;
+          $object->{request}->{action} = $action;
 
           $params->{_library} = $library;
           $params->{_callnr} = $callnumber;
           $params->{_holding} = $holding;
           $params->{_barcode} = $barcode;
+          
+          last;
 
         }
       }

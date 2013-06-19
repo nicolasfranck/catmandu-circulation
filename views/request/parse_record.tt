@@ -41,10 +41,10 @@
   <td>[% obj.record.description | html %]</td>
  </tr>
 [%END%]
-[%IF obj.record.isbn || obj.record.issn %] 
+[%IF obj.record.isbn.list.0 || obj.record.issn.list.0 %] 
  <tr>
   <th>[% l('isbn') %]</th>
-  <td>[% obj.record.isbn | html %] [% obj.record.issn | html %]</td>
+  <td>[% obj.record.isbn.list.0 | html %] [% obj.record.issn.list.0 | html %]</td>
  </tr>
 [%END%]
 [%IF obj.record.series %]
@@ -71,12 +71,12 @@
    </td>
  </tr>
 [%END%]
-[%IF obj.record.location %]
+[%IF obj.record.items.size %]
  <tr>
    <th>[% l('alt_callnr') %]</th>
    <td>
-    [% FOREACH loc IN obj.record.location %]
-	[% loc.shelf %] [% loc.holding %];
+    [% FOREACH item IN obj.record.items %]
+	[% item.location %] [% item.holding %];
     [% END %]
    </td>
  </tr>

@@ -78,3 +78,24 @@ msgstr "beschikbaarheid"
 
 msgid "request-not-possible"
 msgstr "aanvragen niet mogelijk"
+
+msgid "_name_invalid"
+msgstr "gelieve uw naam op te geven"
+
+msgid "_contact_invalid"
+msgstr "gelieve uw GSM of Email op te geven"
+
+msgid "_note_invalid"
+msgstr "gelieve een nota op te geven"
+
+msgid "_uid_invalid"
+msgstr "gelieve een geldige id op te geven"
+
+msgid "some-validation-errors"
+msgstr "Uw aanvraag bevat de volgende fouten"
+
+msgid "please-provide-the-following-information"
+msgstr "Gelieve deze informatie op te geven"
+
+msgid "work-to-be-requested"
+msgstr "Aan te vragen boek"

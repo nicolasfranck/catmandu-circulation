@@ -1,15 +1,26 @@
 # Configuration file for Catmandu Framework
 store:
+  documents:
+    package: "Catmandu::Store::MongoDB"
+    options:
+      host: "localhost:4000"
+      database_name: "meercat"
+      query_timeout : 2000000
   default:
     package: "Catmandu::Store::DBI"
     options:
       data_source: "dbi:mysql:database=circulation_catmandu"
       username: circulation
-      password: circulation
-  searcher:
+      password: ''
+  index:
     package: "Catmandu::Store::Solr"
     options:
-      url: "http://localhost:8984/solr/circulation"
+      url: "http://localhost:8983/solr/circulation"
+  meercat:
+    package: "Catmandu::Store::Solr"
+    options:
+      url: "http://aleph.ugent.be:8983/solr/proxy"
+
 
 request:
   isa:
@@ -31,3 +42,31 @@ request:
     - _type    
     - _note    
     - _callnr
+
+alephx:
+  default:
+    package: "Catmandu::AlephX"
+    options:
+      url: "http://aleph.ugent.be/X"
+importer:
+  fXML:
+    package: "Catmandu::Importer::MARC"
+    options:
+      type: XML
+      fix: items
+fixer:
+  items:    
+    - marc_map('245ab','title',-join => ' ')
+    #baseer je steeds op 852c, en niet op Z30, want niet overal items aanwezig!
+    - marc_map( '852c','libraries.$append','-join' => ' ')
+    - uniq('libraries')
+    - items(marc => 'record',path => 'items')
+    - request_reserve()
+
+record_resolver: &recordresolver
+  package: "RecordResolver::Store"
+  options: {}
+
+availability_resolver: &availabilityresolver
+  package: "RecordResolver::Availability::AlephX"
+  options: {}

@@ -6,7 +6,7 @@ use Try::Tiny;
 use Circulation qw(alephx);
 
 sub resolve {
-  my($self,$id);
+  my($self,$id) = @_;
   
   my(@items,@errors);
 
@@ -16,7 +16,6 @@ sub resolve {
     errors => \@errors
   };
   try{
-
     my($source,$fSYS) = split(':',$id || "");
     #opgelet: alephx gebruikt enkel 1ste 9 cijfers van doc_number. De rest wordt genegeerd.
     my $r = alephx()->item_data(base => $source,doc_number => $fSYS);

@@ -1,0 +1,55 @@
+<table class="table">
+  <tr>
+    <th>Via</th>
+    <th>Datum</th>
+    <th>Van</th>
+    <th>Plaatsnummer</th>
+    <th>Bibliotheek</th>
+    <th>Status</th>
+    <th>Functies</th>
+    <th>&nbsp;</th>
+  </tr>
+  [% FOREACH obj IN result.hits %]
+    [% IF obj.status == 'NEW' %]
+      <tr style="background-color: #fff; font-weight: bold;">
+    [% ELSE %]
+      <tr style="background-color: #efefef;">
+    [% END %]
+      <td style="width: 20px;">
+        [% IF obj.request.mobile %]
+		      <img src="[% request.uri_base %]/img/mobile.png" width="20" height="20" title="Mobile Request"/>
+      	[% ELSE %]
+      		<img src="[% request.uri_base %]/img/laptop.png" width="20" height="20" title="Desktop Request"/>
+      	[% END %]
+      </td>
+   	  <td nowrap="nowrap">[% obj.created | html %]</td>
+      <td>[% obj.request.name | html %]</td>
+      <td width="250">[% obj.request.callnr | html %]</td>
+      <td>[% obj.request.library | html %]</td>
+      <td>[% obj.status | html %]</td>
+      <td nowrap="nowrap">
+        <a href="[% request.uri_base %]/request/view/[% obj.id %]">
+          <img src="[% request.uri_base %]/img/view.png" title="Bekijken" width="20" height="20"/>
+        </a> 
+        [% IF obj.request.contact.match('.*@.*') %]
+          <a href="[% request.uri_base %]/email/reply/[% obj.id %]">
+            <img src="[% request.uri_base %]/img/email.png" title="Email" width="25" height="25"/>
+          </a> 
+        [% ELSE %]
+          <a href="[% request.uri_base %]/sms/reply/[% obj.id %]">
+            <img src="[% request.uri_base %]/img/sms.png" title="SMS" width="20" height="20"/>
+          </a> 
+        [% END %]        
+        <a href="javascript:printMe('print?func=view&amp;_id=[% obj.id %]&store=1');">
+          <img src="[% request.uri_base %]/img/print.png" title="Print" width="20" height="20"/>
+        </a> 
+        [% obj.print.count %]
+      </td>
+      <td>
+        [% IF obj.record.availability.status == 'XA' || obj.record.availability.status == 'XB' %]
+          <font color="#990000">*aleph*</font>
+        [% END %]
+      </td>
+   </tr>
+ [% END %]
+</table>
