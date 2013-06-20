@@ -75,3 +75,60 @@ Plack::Loader::run('Plack::Loader=HASH(0x91f048)', 'Plack::Handler::Standalone=H
 Plack::Runner::run('Plack::Runner=HASH(0x794a18)') called at /usr/local/bin/plackup line 10 in /usr/local/share/perl5/Dancer/Handler.pm l. 98
 [5929] error @0.556258> [hit #1]request to GET /request crashed: core - template - file error - parse error - shared/pagination.tt line 8: unexpected end of directive
   [% MACRO page_href(start,limit,sort) %] at /usr/local/share/perl5/Dancer/Template/Abstract.pm line 89. in /usr/local/share/perl5/Dancer/Handler.pm l. 98
+[5198] error @0.001977> [hit #56]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[5198] error @0.003861> [hit #57]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[5198] error @0.002208> [hit #58]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[5198] error @0.003270> [hit #59]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[5198] error @0.002193> [hit #60]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[5198] error @0.002579> [hit #61]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[5198] error @0.002688> [hit #62]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[5198] error @0.004046> [hit #63]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[5198] error @0.002573> [hit #64]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[5198] error @0.001710> [hit #65]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[5198] error @0.004492> [hit #66]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[5198] error @0.004804> [hit #67]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[5911] error @0.006915> [hit #1]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[5911] error @0.004421> [hit #2]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[6062] error @0.009495> [hit #1]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[6062] error @0.002567> [hit #2]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[6062] error @0.023868> [hit #8]request to GET /request crashed: core - template - file error - parse error - request/list_objects.tt line 28: unexpected token ('en_GB))
+  [% date.format(time = obj.created,format = '%Y-%m-%d %H:%M:%S',locale = 'en_GB) %] at /usr/local/share/perl5/Dancer/Template/Abstract.pm line 89. in /usr/local/share/perl5/Dancer/Handler.pm l. 98
+[6062] error @0.003915> [hit #9]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[6062] error @0.036015> [hit #40]request to GET /request crashed: core - template - date error - bad time/date string:  expects 'h:m:s d:m:y'  got: '2013-06-20T07:48:49.999Z' at /usr/local/share/perl5/Dancer/Template/Abstract.pm line 89. in /usr/local/share/perl5/Dancer/Handler.pm l. 98
+[6062] error @0.002868> [hit #41]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[6062] error @0.004161> [hit #43]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[6062] error @0.002974> [hit #134]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[6062] error @0.002843> [hit #135]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[6062] error @0.002006> [hit #136]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[6062] error @0.003289> [hit #137]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[6062] error @0.001984> [hit #138]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[6062] error @0.001813> [hit #139]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[8466] error @0.002596> [hit #2]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[8466] error @0.006474> [hit #3]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[8466] error @0.002879> [hit #16]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[8466] error @0.002276> [hit #17]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[8557] error @0.002786> [hit #12]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[8557] error @0.001791> [hit #14]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[8557] error @0.022295> [hit #15]request to GET /request/view/D868BDCA-D97D-11E2-9289-F7E1249E76B4 crashed: core - template - file error - parse error - /home/njfranck/git/catmandu-circulation/views/request/view.tt line 99: unexpected end of directive
+  [% FOREACH key IN ["year","volume","issue","page","note" %] at /usr/local/share/perl5/Dancer/Template/Abstract.pm line 89. in /usr/local/share/perl5/Dancer/Handler.pm l. 98
+[8557] error @0.002553> [hit #16]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[8557] error @0.020974> [hit #17]request to GET /request/view/D868BDCA-D97D-11E2-9289-F7E1249E76B4 crashed: core - template - file error - parse error - /home/njfranck/git/catmandu-circulation/views/request/view.tt line 144: unexpected token (ELSE)
+  [% ELSE %] at /usr/local/share/perl5/Dancer/Template/Abstract.pm line 89. in /usr/local/share/perl5/Dancer/Handler.pm l. 98
+[8557] error @0.002458> [hit #18]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[8557] error @0.001706> [hit #31]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[8557] error @0.001707> [hit #32]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[8557] error @0.002661> [hit #45]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[8557] error @0.001744> [hit #46]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[8557] error @0.002433> [hit #59]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[8557] error @0.001709> [hit #60]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[8557] error @0.002071> [hit #73]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[8557] error @0.001836> [hit #74]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[8557] error @0.002051> [hit #75]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[8557] error @0.002480> [hit #76]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[8557] error @0.004779> [hit #77]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[8557] error @0.005369> [hit #78]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[8557] error @0.002383> [hit #79]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[8557] error @0.004121> [hit #80]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[8557] error @0.002573> [hit #81]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[8557] error @0.002773> [hit #82]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181
+[8557] error @0.001684> [hit #83]Supplied view (not_found) not found -  does not exist in /usr/local/share/perl5/Dancer/Template/Abstract.pm l. 181

@@ -76,7 +76,6 @@ prefix '/items' => sub {
     $o->{locale} = config->{locale}->{ language_tag() } || config->{library}->{default_locale};
     $o->{library} = { map { $_->{library} => 1; } @{ $r->{items} || [] }  };
     $o->{library} = [keys %{ $o->{library} }];
-    say STDERR to_dumper($o);
     $r->{libraries} = openingsuren()->libraries($o);
 
     #return to_json($r,{ pretty => 1 });

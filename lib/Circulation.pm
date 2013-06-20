@@ -3,9 +3,10 @@ use Catmandu::Sane;
 use Catmandu;
 use Catmandu::Util qw(:is :check require_package :array data_at);
 use Try::Tiny;
+use POSIX qw(strftime);
 
 use Exporter qw(import);
-our @stores = qw(requests emails libraries prints sessions sms templates index_requests meercat request_reserve record_resolver availability_resolver);
+our @stores = qw(requests emails libraries prints sessions sms templates index_requests meercat request_reserve record_resolver availability_resolver time2str);
 our @validator = qw(validator resolve_validator_errors);
 our @alephx = qw(alephx);
 our @EXPORT_OK = (@stores,@validator,@alephx);
@@ -148,6 +149,13 @@ sub availability_resolver {
   state $a = require_package(config->{availability_resolver}->{package})->new(
     %{ config->{availability_resolver}->{options} }
   );
+}
+
+
+sub time2str {
+  my $time = shift || time;
+  $time = int($time);
+  strftime "%Y-%m-%dT%H:%M:%S.999Z",gmtime($time);
 }
 
 1;

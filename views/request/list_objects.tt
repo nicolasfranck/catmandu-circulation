@@ -1,3 +1,5 @@
+[% USE date %]
+
 <table class="table">
   <tr>
     <th>Via</th>
@@ -22,7 +24,9 @@
       		<img src="[% request.uri_base %]/img/laptop.png" width="20" height="20" title="Desktop Request"/>
       	[% END %]
       </td>
-   	  <td nowrap="nowrap">[% obj.created | html %]</td>
+   	  <td nowrap="nowrap">
+        [% date.format(time => obj.created.replace('[T]',' ').replace('\.\d+Z$',''),format => '%d-%m-%Y %H:%M:%S',locale => 'nl_NL') %]
+      </td>
       <td>[% obj.request.name | html %]</td>
       <td width="250">[% obj.request.callnr | html %]</td>
       <td>[% obj.request.library | html %]</td>
@@ -43,7 +47,7 @@
         <a href="javascript:printMe('print?func=view&amp;_id=[% obj.id %]&store=1');">
           <img src="[% request.uri_base %]/img/print.png" title="Print" width="20" height="20"/>
         </a> 
-        [% obj.print.count %]
+        [% obj.prints.size %]
       </td>
       <td>
         [% IF obj.record.availability.status == 'XA' || obj.record.availability.status == 'XB' %]

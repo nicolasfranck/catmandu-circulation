@@ -1,67 +1,32 @@
 <div>
 <table>
-[% IF obj.record.card %]
+[% IF obj.record.cover %]
 <tr>
  <td colspan="2">
- [% IF settings.ssl.active %]
-  <img src="[% obj.record.card_url.replace("http://","https://") %]"/>
- [% ELSE %]
-  <img src="[% obj.record.card_url %]"/>
- [% END %]
+  <img src="[% obj.record.cover %]"/>
  </td>
 </tr>
 [%END%]
-[%IF obj.record.title %]
- <tr>
-  <th>[% l('title') %]</th>
-  <td>[% obj.record.title | html %]</td>
- </tr>
-[%END%]
-[%IF obj.record.author %]
- <tr>
-  <th>[% l('author') %]</th>
-  <td>[% obj.record.author | html %]</td>
- </tr>
-[%END%]
-[%IF obj.record.publisher %]
- <tr>
-  <th>[% l('publisher') %]</th>
-  <td>[% obj.record.publisher | html %]</td>
- </tr>
-[%END%]
-[%IF obj.record.dateIssued %]
- <tr>
-  <th>[% l('date-issued') %]</th>
-  <td>[% obj.record.dateIssued | html %]</td>
- </tr>
-[%END%]
-[%IF obj.record.description %]
- <tr>
-  <th>[% l('description') %]</th>
-  <td>[% obj.record.description | html %]</td>
- </tr>
-[%END%]
-[%IF obj.record.isbn.list.0 || obj.record.issn.list.0 %] 
- <tr>
-  <th>[% l('isbn') %]</th>
-  <td>[% obj.record.isbn.list.0 | html %] [% obj.record.issn.list.0 | html %]</td>
- </tr>
-[%END%]
-[%IF obj.record.series %]
- <tr>
-  <th>[% l('series') %]</th>
-  <td>[% obj.record.series | html %]</td>
- </tr>
-[%END%]
-[%IF obj.record.year %]
+
+[% FOREACH key IN ["title","author","publisher","dateIssued","description","isbn","issn","series"] %]
+  [% NEXT UNLESS obj.record.item(key) %]
+  [% FOREACH val IN obj.record.item(key).list %]
+  <tr>
+    <th>[% l(key) %]</th>
+    <td>[% val | html %]</td>
+  </tr>
+  [% END %]
+[% END %]
+
+[% IF obj.record.year %]
  <tr>
   <th>[% l('year-volume-pages') %]</th>
   <td>
    [% obj.record.year | html %] [% obj.record.volume | html %] [% obj.record.issue | html %] [% obj.record.page | html %]
   </td>
  </tr>
-[%END%]
-[%IF obj.record.availability %]
+[% END %]
+[% IF obj.record.availability %]
  <tr>
    <th>[% l('availability') %]</th>
    <td>
@@ -76,7 +41,7 @@
    <th>[% l('alt_callnr') %]</th>
    <td>
     [% FOREACH item IN obj.record.items %]
-	[% item.location %] [% item.holding %];
+	    [% item.location %] [% item.holding %];
     [% END %]
    </td>
  </tr>

@@ -9,7 +9,6 @@ use Circulation qw(:all);
 use Circulation::Indexable::Request;
 use Catmandu::Util qw(:is :array require_package);
 use Try::Tiny;
-use POSIX qw(strftime);
 
 #list records, and filter them by query
 prefix '/request' => sub {
@@ -40,12 +39,9 @@ prefix '/request' => sub {
     my $result = index_requests()->search(%search,reify => requests());
 
     #TODO: aantal print jobs voor elk record
-    for my $hit(@{ $result->hits }){
-      $hit->{'print'}->{count} = 0;
-    }
 
-    my $today = strftime "%Y-%m-%dT%H:%M:%S.999Z" , gmtime(time);
-    my $yesterday = strftime "%Y-%m-%dT%H:%M:%S.999Z" , gmtime(time - 3600*24*2);
+    my $today = time2str();
+    my $yesterday = time2str(time - 3600*24*2);
 
     template 'request/list.tt', { today => $today,yesterday => $yesterday,result => $result};
   };
@@ -93,6 +89,13 @@ prefix '/request' => sub {
       return to_json($object);
     }    
   };
+
+  get '/view/:_id' => sub {
+    my $object = requests()->get(params()->{_id});
+    #content_type 'json';
+    #to_json($object,{pretty => 1 });
+    template 'request/view',{ obj => $object };
+  };
  
 };
 sub queue {
@@ -127,8 +130,8 @@ sub parse_request {
   my $session = session();
 
   my $object = {
-    created => time,
-    modified => time
+    created => time2str(),
+    modified => time2str()
   };
 
   $object->{request}->{remote_addr} = request->remote_address;
@@ -219,6 +222,8 @@ sub parse_request {
     $params->{_uid} = $session->{uid} unless $params->{_uid};
     $params->{_remember} = 'on';
   }
+
+  $object->{$_} = [] for qw(prints sms emails);
 
   return $object;
 }
